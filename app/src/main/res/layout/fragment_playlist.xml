@@ -1,26 +1,39 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rootLayout"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp">
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:padding="16dp">
 
     <!-- Course Title -->
     <TextView
         android:id="@+id/courseTitle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Course Title"
-        android:textSize="20sp"
+        android:text="Introduction to Data Science"
+        android:textSize="18sp"
         android:textStyle="bold"
-        android:padding="8dp"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="12dp" />
 
     <!-- WebView to display the video -->
     <WebView
         android:id="@+id/videoWebView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:layout_marginBottom="16dp"
+        android:background="@android:color/darker_gray" />
+
+    <!-- Section Title -->
+    <TextView
+        android:id="@+id/courseContentTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Course Content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
         android:layout_marginBottom="8dp" />
 
     <!-- RecyclerView to display playlist videos -->

@@ -1,284 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAFA"
-    tools:context=".Profile">
+    android:background="#FFFFFF">
 
     <LinearLayout
-        android:layout_width="match_parent"
         android:id="@+id/main"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="32dp">
+        android:padding="24dp">
 
+        <!-- Profile Header -->
         <TextView
             android:id="@+id/profileTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Profile"
-            android:textSize="36sp"
+            android:textSize="24sp"
             android:textColor="#222222"
             android:textStyle="bold"
-            android:paddingBottom="40dp" />
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="24dp" />
 
-        <!-- Name Card -->
-        <androidx.cardview.widget.CardView
+        <!-- (Skip image for now) -->
+        <!-- User Name -->
+        <TextView
+            android:id="@+id/textProfileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="4dp"/>
+
+        <!-- Subtitle -->
+        <TextView
+            android:id="@+id/textProfileSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="16sp"
+            android:textColor="#8E24AA"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="32dp"/>
+
+        <!-- Info Rows -->
+
+        <!-- Row Template -->
+        <!-- Repeat this block for Name, Email, Location, Skills -->
+
+        <!-- Name Row -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="10dp"
-            android:padding="20dp"
-            android:background="@android:color/white">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
 
+            <!-- Left side: Labels -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingBottom="12dp"
-                android:paddingStart="20dp"
-                android:paddingTop="12dp">
-
-                <!-- Circle Background -->
-                <FrameLayout
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/circle_bg"
-                    android:layout_marginEnd="12dp">
-
-                    <!-- Name Icon -->
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@android:drawable/ic_menu_myplaces" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Name"
-                        android:textSize="15sp"
-                        android:textColor="#AAAAAA"
-                        android:textStyle="normal" />
-
-                    <TextView
-                        android:id="@+id/textName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Your Name"
-                        android:textSize="17sp"
-                        android:textColor="#333333"
-                        android:textStyle="bold"
-                        android:paddingTop="4dp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- Email Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="10dp"
-            android:padding="20dp"
-            android:background="@android:color/white">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingBottom="12dp"
-                android:paddingStart="20dp"
-                android:paddingTop="12dp">
-
-                <!-- Circle Background -->
-                <FrameLayout
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/circle_bg"
-                    android:layout_marginEnd="12dp">
-
-                    <!-- Email Icon -->
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@android:drawable/ic_dialog_email" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Email"
-                        android:textSize="15sp"
-                        android:textColor="#AAAAAA"
-                        android:textStyle="normal" />
-
-                    <TextView
-                        android:id="@+id/textEmail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Your Email"
-                        android:textSize="17sp"
-                        android:textColor="#333333"
-                        android:textStyle="bold"
-                        android:paddingTop="4dp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- Location Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="10dp"
-            android:padding="20dp"
-            android:background="@android:color/white">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingBottom="12dp"
-                android:paddingStart="20dp"
-                android:paddingTop="12dp">
-
-                <!-- Circle Background -->
-                <FrameLayout
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/circle_bg"
-                    android:layout_marginEnd="12dp">
-
-                    <!-- Default Android Icon -->
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@android:drawable/ic_menu_mylocation" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Location"
-                        android:textSize="15sp"
-                        android:textColor="#AAAAAA"
-                        android:textStyle="normal" />
-
-                    <TextView
-                        android:id="@+id/textLocation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Your Location"
-                        android:textSize="17sp"
-                        android:textColor="#333333"
-                        android:textStyle="bold"
-                        android:paddingTop="4dp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- Skills Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="10dp"
-            android:padding="20dp"
-            android:background="@android:color/white">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingBottom="12dp"
-                    android:paddingStart="20dp"
-                    android:paddingTop="12dp">
+                    android:text="Name"
+                    android:textSize="14sp"
+                    android:textColor="#8E24AA"/>
 
-                    <!-- Circle Background -->
-                    <FrameLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/circle_bg"
-                        android:layout_marginEnd="12dp">
-
-                        <!-- Default Android Icon -->
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_manage" />
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Skills"
-                            android:textSize="15sp"
-                            android:textColor="#AAAAAA"
-                            android:textStyle="normal" />
-
-                        <TextView
-                            android:id="@+id/textSkills"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Your Skills"
-                            android:textSize="17sp"
-                            android:textColor="#333333"
-                            android:textStyle="bold"
-                            android:paddingTop="4dp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
+                <TextView
+                    android:id="@+id/textName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#222222"
+                    android:paddingTop="4dp"/>
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+            <!-- Right side: Icon box -->
+            <View
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="#FBE7A5"
+                android:layout_marginStart="12dp"
+                android:backgroundTint="#FBE7A5" />
+
+        </LinearLayout>
+
+        <!-- Email Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email"
+                    android:textSize="14sp"
+                    android:textColor="#8E24AA"/>
+
+                <TextView
+                    android:id="@+id/textEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#222222"
+                    android:paddingTop="4dp"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="#EEF4F1"
+                android:layout_marginStart="12dp"
+                android:backgroundTint="#EEF4F1" />
+        </LinearLayout>
+
+        <!-- Location Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location"
+                    android:textSize="14sp"
+                    android:textColor="#8E24AA"/>
+
+                <TextView
+                    android:id="@+id/textLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#222222"
+                    android:paddingTop="4dp"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="#37474F"
+                android:layout_marginStart="12dp"
+                android:backgroundTint="#37474F" />
+        </LinearLayout>
+
+        <!-- Skills Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Skills"
+                    android:textSize="14sp"
+                    android:textColor="#8E24AA"/>
+
+                <TextView
+                    android:id="@+id/textSkills"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#222222"
+                    android:paddingTop="4dp"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="#2C3E50"
+                android:layout_marginStart="12dp"
+                android:backgroundTint="#2C3E50" />
+        </LinearLayout>
 
     </LinearLayout>
 
