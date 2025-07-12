@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- ✅ ScrollView with your existing content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ✅ Search Bar -->
+            <LinearLayout
+                android:id="@+id/searchContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="@drawable/search_bar_background"
+                android:elevation="4dp"
+                android:layout_margin="16dp"
+                android:gravity="center_vertical">
+
+                <AutoCompleteTextView
+                    android:id="@+id/etSearchBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Search courses or skills..."
+                    android:background="@null"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:inputType="text"
+                    android:padding="8dp"
+                    android:dropDownHeight="wrap_content"
+                    android:dropDownVerticalOffset="10dp"
+                    android:dropDownHorizontalOffset="10dp"
+                    android:completionThreshold="1" />
+
+                <ImageView
+                    android:id="@+id/ivSearchIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_search"
+                    android:padding="8dp"
+                    android:contentDescription="Search"
+                    android:tint="@color/black" />
+            </LinearLayout>
+
+
+            <!-- ✅ Categories Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Categories"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/design_category"
+                        android:layout_marginEnd="12dp"
+                        android:scaleType="centerCrop"
+                        android:background="@drawable/rounded_bg" />
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/coding_category"
+                        android:layout_marginEnd="12dp"
+                        android:scaleType="centerCrop"
+                        android:background="@drawable/rounded_bg" />
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/photo_category"
+                        android:scaleType="centerCrop"
+                        android:background="@drawable/rounded_bg" />
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- ✅ Featured Course -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Featured Course"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerFeatured"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="16dp"
+                android:clipToPadding="false"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
+                android:overScrollMode="never"
+                android:orientation="horizontal" />
+
+            <TextView
+                android:id="@+id/featuredCourseTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mastering UI/UX Design"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/featuredCourseDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Learn the fundamentals of UI/UX design and create stunning interfaces."
+                android:textColor="#555555"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/featuredCourseDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="45 min"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- ✅ Recommended Courses -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Recommended Courses"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="12dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerCourses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginBottom="16dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ✅ Floating bot FAB -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabBot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_bot"
+        android:contentDescription="Chat Bot"
+        app:tint="@android:color/white"
+        app:backgroundTint="@color/black"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:visibility="gone"/>
+
+</FrameLayout>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/exploreFragmentLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ExploreSkilCoursesFragment"
+    android:background="@android:color/white">
+
+    <!-- 🔵 Title -->
+    <TextView
+        android:id="@+id/headingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Explore Skil Courses"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_margin="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <!-- 🔍 Search Bar -->
+    <LinearLayout
+        android:id="@+id/searchBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headingText"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/search_bar_bg"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:elevation="2dp"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp">
+
+        <AutoCompleteTextView
+            android:id="@+id/etExploreSearchBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Search courses or skills..."
+            android:background="@null"
+            android:paddingStart="8dp"
+            android:dropDownVerticalOffset="10dp"
+            android:dropDownHorizontalOffset="8dp"
+            android:completionThreshold="1"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:inputType="text" />
+
+        <ImageView
+            android:id="@+id/ivExploreSearchIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_search"
+            android:contentDescription="Search"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="4dp"
+            app:tint="@color/black" />
+    </LinearLayout>
+
+
+    <!-- 📦 RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewCourses"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/searchBarLayout"
+        android:layout_marginTop="8dp"
+        android:padding="8dp" />
+
+</RelativeLayout>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:fillViewport="true"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingBottom="20dp">
+
+        <!-- Header Image -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/login_page_image"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="20dp"
+            android:contentDescription="Login image" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/logintxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create an Account"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Join and start your learning journey."
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Username -->
+        <EditText
+            android:id="@+id/lusername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Full Name"
+            android:padding="12dp"
+            android:background="@drawable/edt_bg"
+            android:textColor="#000000"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Password -->
+        <EditText
+            android:id="@+id/lpassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Password"
+            android:padding="12dp"
+            android:background="@drawable/edt_bg"
+            android:inputType="textPassword"
+            android:textColor="#000000"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Log In Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnlogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Log In"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:backgroundTint="#6C4AB6"
+            android:textAllCaps="false"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Signup Redirect -->
+        <TextView
+            android:id="@+id/signupredirecttxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New here? Sign up"
+            android:textAlignment="center"
+            android:textColor="#6C4AB6"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="10dp" />
+    </LinearLayout>
+</ScrollView>

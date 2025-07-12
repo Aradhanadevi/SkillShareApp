@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "973139023798",
+    "project_id": "skilshare-1a958",
+    "storage_bucket": "skilshare-1a958.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:973139023798:android:74a4dfad6b4f7ae35e9317",
+        "android_client_info": {
+          "package_name": "anjali.learning.skilshare"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByvSFRXsssjPqXQRxbD5o6KNwWkbeI7WI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

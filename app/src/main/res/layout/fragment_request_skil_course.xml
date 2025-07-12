@@ -1,0 +1,60 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Your Name"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Your Email"
+            android:inputType="textEmailAddress"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/etCourseRequest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Requested Course Name"
+            android:inputType="textCapWords"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/etTutorName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Suggested Tutor Name"
+            android:inputType="textPersonName"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/etCourseDescription"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:hint="Course Description / Topics you want"
+            android:inputType="textMultiLine"
+            android:gravity="top"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/btnSubmitRequest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit Request"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+</ScrollView>
