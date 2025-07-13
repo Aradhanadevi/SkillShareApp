@@ -105,32 +105,67 @@ public class TutorAdapter extends RecyclerView.Adapter<TutorAdapter.TutorViewHol
     }
 
     private void pushMessageToFirebase(String tutorUsername,
-                                       String myOffered,
-                                       String myRequested,
-                                       String tutorWanted,
-                                       String tutorOffered,
+                                       String myOfferedSkill,
+                                       String myRequestedSkill,
+                                       String tutorWantedSkill,
+                                       String tutorOfferedSkill,
                                        String msg) {
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("from", currentUsername);
-        data.put("myOfferedSkill", myOffered);
-        data.put("myRequestedSkill", myRequested);
-        data.put("tutorWantedSkill", tutorWanted);
-        data.put("tutorOfferedSkill", tutorOffered);
-        data.put("message", msg);
-        data.put("timestamp", ServerValue.TIMESTAMP);
+        DatabaseReference root = FirebaseDatabase.getInstance().getReference("users");
 
-        FirebaseDatabase.getInstance()
-                .getReference("users")
-                .child(tutorUsername)
-                .child("messages")
-                .push()
-                .setValue(data)
-                .addOnSuccessListener(v ->
-                        Toast.makeText(context, "Request sent!", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e ->
-                        Toast.makeText(context, "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        // 1. Get *both* e‑mail addresses in one round‑trip
+        root.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override public void onDataChange(@NonNull DataSnapshot snap) {
+
+                String senderEmail    = snap.child(currentUsername)
+                        .child("email").getValue(String.class);
+                String recipientEmail = snap.child(tutorUsername)
+                        .child("email").getValue(String.class);
+
+                long ts = System.currentTimeMillis();
+
+                // 2️⃣ Data for recipient’s inbox
+                Map<String,Object> toRecipient = new HashMap<>();
+                toRecipient.put("from",            currentUsername);
+                toRecipient.put("fromEmail",       senderEmail);
+                toRecipient.put("myOfferedSkill",  myOfferedSkill);
+                toRecipient.put("myRequestedSkill",myRequestedSkill);
+                toRecipient.put("tutorWantedSkill",tutorWantedSkill);
+                toRecipient.put("tutorOfferedSkill",tutorOfferedSkill);
+                toRecipient.put("message",         msg);
+                toRecipient.put("timestamp",       ts);
+
+                // 3️⃣ Data for my “sent” folder
+                Map<String,Object> toSenderCopy = new HashMap<>(toRecipient);
+                toSenderCopy.put("to",       tutorUsername);
+                toSenderCopy.put("toEmail",  recipientEmail);
+
+                // 4. Write both nodes
+                DatabaseReference inboxRef   = root.child(tutorUsername)
+                        .child("messages")
+                        .push();
+                DatabaseReference sentRef    = root.child(currentUsername)
+                        .child("messages")
+                        .child("send")
+                        .push();
+
+                Map<String,Object> multiUpdate = new HashMap<>();
+                multiUpdate.put(inboxRef.getPath().toString(),   toRecipient);
+                multiUpdate.put(sentRef.getPath().toString(),    toSenderCopy);
+
+                root.getRoot().updateChildren(multiUpdate)
+                        .addOnSuccessListener(v ->
+                                Toast.makeText(context,"Request sent!",Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e ->
+                                Toast.makeText(context,"Failed: "+e.getMessage(),Toast.LENGTH_SHORT).show());
+            }
+
+            @Override public void onCancelled(@NonNull DatabaseError e) {
+                Toast.makeText(context, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
 
     private ArrayAdapter<String> makeAdapter(String csv) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context,

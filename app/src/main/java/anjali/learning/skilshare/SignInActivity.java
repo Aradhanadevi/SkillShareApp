@@ -68,6 +68,10 @@ public class SignInActivity extends AppCompatActivity {
                                 .addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(SignInActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                                        getSharedPreferences("SkillSharePrefs", MODE_PRIVATE)
+                                                .edit()
+                                                .putString("currentUsername", Username)
+                                                .apply();
                                         Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                                         intent.putExtra("username", Username); // still pass username
                                         startActivity(intent);

@@ -1,5 +1,9 @@
 package anjali.learning.skilshare;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,7 +52,8 @@ public class HomeFragment extends Fragment {
 
     private AutoCompleteTextView etSearchBar;
     private ImageView ivSearchIcon;
-    private FloatingActionButton fabBot;
+    private FloatingActionButton fabBot,fabMessage;
+
 
     @Nullable
     @Override
@@ -80,6 +85,23 @@ public class HomeFragment extends Fragment {
         etSearchBar = view.findViewById(R.id.etSearchBar);
         ivSearchIcon = view.findViewById(R.id.ivSearchIcon);
         fabBot = view.findViewById(R.id.fabBot);
+        fabMessage=view.findViewById(R.id.fabMessages);
+
+        String currentUsername = requireContext()
+                .getSharedPreferences("SkillSharePrefs", MODE_PRIVATE)
+                .getString("currentUsername", null);
+
+
+        fabMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //redirect from fragment to activity
+                Intent redirectToMessageScreen=new Intent(requireContext(),MessageRequestActivity.class);
+                redirectToMessageScreen.putExtra("currentUsername", currentUsername);
+                startActivity(redirectToMessageScreen);
+            }
+        });
 
         fabBot.setOnClickListener(v -> {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
