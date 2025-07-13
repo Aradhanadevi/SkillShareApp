@@ -24,12 +24,12 @@ public class SignUpActivity extends AppCompatActivity {
 
     Button Signup;
     TextView redirectToSignin;
-    EditText username, name, password, confirmpassword, skils, location, email;
+    EditText username, name, password, confirmpassword, skils,skilloffered,skillrequested, location, email;
     CheckBox accepttandc;
 
     FirebaseAuth mAuth;
     DatabaseReference database;
-
+    //comment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +45,8 @@ public class SignUpActivity extends AppCompatActivity {
         email = findViewById(R.id.email);
         accepttandc = findViewById(R.id.accepttandc);
         name = findViewById(R.id.name);
+        skilloffered=findViewById(R.id.skillsOffered);
+        skillrequested=findViewById(R.id.skillsRequested);
 
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance().getReference("users");
@@ -56,10 +58,12 @@ public class SignUpActivity extends AppCompatActivity {
             String Password = password.getText().toString().trim();
             String ConfirmPassword = confirmpassword.getText().toString().trim();
             String Skils = skils.getText().toString().trim();
+            String SkillOffered=skilloffered.getText().toString().trim();
+            String SkillRequested=skillrequested.getText().toString().trim();
             String Location = location.getText().toString().trim();
             String emailPattern = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$";
 
-            if (Name.isEmpty() || Username.isEmpty() || Password.isEmpty() || ConfirmPassword.isEmpty() || Skils.isEmpty() || Location.isEmpty() || Email.isEmpty()) {
+            if (Name.isEmpty() || Username.isEmpty() || Password.isEmpty() || ConfirmPassword.isEmpty() || Skils.isEmpty() || Location.isEmpty() || Email.isEmpty()||SkillOffered.isEmpty()||SkillRequested.isEmpty()) {
                 Toast.makeText(SignUpActivity.this, "Please enter all details", Toast.LENGTH_SHORT).show();
             } else if (!Email.matches(emailPattern)) {
                 email.setError("Enter valid email");
@@ -79,12 +83,15 @@ public class SignUpActivity extends AppCompatActivity {
                                 userMap.put("email", Email);
                                 userMap.put("password", Password); // avoid storing plaintext in production
                                 userMap.put("skills", Skils);
+                                userMap.put("skilloffered",SkillOffered);
+                                userMap.put("skillrequested",SkillRequested);
                                 userMap.put("location", Location);
 
                                 database.child(Username).setValue(userMap)
                                         .addOnSuccessListener(aVoid -> {
                                             Toast.makeText(SignUpActivity.this, "Registered Successfully!", Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                                            finish();
                                         })
                                         .addOnFailureListener(e ->
                                         {

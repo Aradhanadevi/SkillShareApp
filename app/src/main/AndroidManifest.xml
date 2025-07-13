@@ -13,17 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SkilShare"
-
         tools:targetApi="31">
-
+        <activity
+            android:name=".LearnRequestedSkill"
+            android:exported="false" />
         <activity
             android:name=".Profile"
             android:exported="false" />
         <activity
             android:name=".nav_header"
             android:exported="false" />
-
-
         <activity
             android:name=".SignUpActivity"
             android:exported="false"
@@ -39,12 +38,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ChatActivity" />
-
         <activity
             android:name=".MainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-
     </application>
 
 </manifest>

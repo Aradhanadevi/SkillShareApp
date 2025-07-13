@@ -219,7 +219,96 @@
                 android:layout_marginStart="12dp"
                 android:backgroundTint="#2C3E50" />
         </LinearLayout>
+<!--Skill Requested-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Skills Requested"
+                    android:textSize="14sp"
+                    android:textColor="#8E24AA"/>
+
+                <TextView
+                    android:id="@+id/textSkillRequested"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#222222"
+                    android:paddingTop="4dp"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="#EEF4F1"
+                android:layout_marginStart="12dp"
+                android:backgroundTint="#EEF4F1" />
+        </LinearLayout>
+<!--Skill Offered-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Skills Offered"
+                    android:textSize="14sp"
+                    android:textColor="#8E24AA"/>
+
+                <TextView
+                    android:id="@+id/textSkillOffered"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#222222"
+                    android:paddingTop="4dp"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="#EEF4F1"
+                android:layout_marginStart="12dp"
+                android:backgroundTint="#EEF4F1" />
+        </LinearLayout>
+
+
+<!--        Request Swap Skills Button-->
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Swap Skills"
+            android:id="@+id/learnrequestedskill"
+            />
     </LinearLayout>
 
 </ScrollView>

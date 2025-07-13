@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Your Offered Skills -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose one of your offered skills" />
+
+    <Spinner
+        android:id="@+id/spinnerMyOffered"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Your Requested Skills -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose one of your requested skills" />
+
+    <Spinner
+        android:id="@+id/spinnerMyRequested"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Their Wanted Skills -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose one of their wanted skills" />
+
+    <Spinner
+        android:id="@+id/spinnerTutorWanted"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp" />
+
+    <!-- ✅ NEW: Their Offered Skills -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose one of their offered skills" />
+
+    <Spinner
+        android:id="@+id/spinnerTutorOffered"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Message -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Message" />
+
+    <EditText
+        android:id="@+id/etMessage"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/edt_bg"
+        android:gravity="top|start"
+        android:inputType="textMultiLine"
+        android:padding="8dp" />
+</LinearLayout>

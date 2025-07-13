@@ -17,7 +17,7 @@
             android:id="@+id/nav_uploadskilcourse"
             android:icon="@drawable/nav_uploadskilcourse"
             android:title="Upload Skill Course"
-            android:visible="false"
+
             />
         <item
             android:id="@+id/nav_exploremoreskilcourse"
