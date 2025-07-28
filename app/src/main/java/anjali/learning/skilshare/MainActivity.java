@@ -101,6 +101,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     String email = snapshot.child("email").getValue(String.class);
                     nameTextView.setText(name);
                     emailTextView.setText(email);
+
+                    Boolean isApproved = snapshot.child("approvedtutor").getValue(Boolean.class);
+
+                    // Hide or show the "Upload Skill Course" menu item based on user>approved tutor is true or false
+                    MenuItem uploadMenuItem = navigationView.getMenu().findItem(R.id.nav_uploadskilcourse);
+                    if (isApproved != null && isApproved) {
+                        uploadMenuItem.setVisible(true); // show if approved
+                    } else {
+                        uploadMenuItem.setVisible(false); // hide if not approved
+                    }
                 }
             }
 

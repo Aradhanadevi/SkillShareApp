@@ -25,7 +25,7 @@ public class SignUpActivity extends AppCompatActivity {
     Button Signup;
     TextView redirectToSignin;
     EditText username, name, password, confirmpassword, skils,skilloffered,skillrequested, location, email;
-    CheckBox accepttandc;
+    CheckBox accepttandc,alsowanttutorrights;
 
     FirebaseAuth mAuth;
     DatabaseReference database;
@@ -47,6 +47,7 @@ public class SignUpActivity extends AppCompatActivity {
         name = findViewById(R.id.name);
         skilloffered=findViewById(R.id.skillsOffered);
         skillrequested=findViewById(R.id.skillsRequested);
+        alsowanttutorrights=findViewById(R.id.wanttutorrights);
 
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance().getReference("users");
@@ -86,6 +87,14 @@ public class SignUpActivity extends AppCompatActivity {
                                 userMap.put("skilloffered",SkillOffered);
                                 userMap.put("skillrequested",SkillRequested);
                                 userMap.put("location", Location);
+// to check whether user want and has tutor rights else if checkbox is not checked both will be stored as false.
+                                if (alsowanttutorrights.isChecked()) {
+                                    userMap.put("wanttutorrights", true);
+                                    userMap.put("approvedtutor", false); // default false for admin approval
+                                }else{
+                                    userMap.put("wanttutorrights", false);
+                                    userMap.put("approvedtutor", false);
+                                }
 
                                 database.child(Username).setValue(userMap)
                                         .addOnSuccessListener(aVoid -> {
