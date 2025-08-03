@@ -42,6 +42,8 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.firebase.firestore)
+    implementation(libs.volley)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
@@ -52,6 +54,8 @@ dependencies {
 
     //to use youtube data api v3
 
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.google.code.gson:gson:2.10.1")
+
+    implementation("com.firebaseui:firebase-ui-database:8.0.2")
+
+
 }

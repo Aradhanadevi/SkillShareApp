@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,8 +35,9 @@ public class RegisteredCourseAdapter extends RecyclerView.Adapter<RegisteredCour
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView courseImage;
-        TextView courseName, tutor, price;
+        TextView courseName, tutor, price, progressText;
         Button goToCourseBtn, cancelBtn;
+        ProgressBar progressBar;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -45,19 +47,21 @@ public class RegisteredCourseAdapter extends RecyclerView.Adapter<RegisteredCour
             price = itemView.findViewById(R.id.coursePrice);
             goToCourseBtn = itemView.findViewById(R.id.goToCourseBtn);
             cancelBtn = itemView.findViewById(R.id.cancelCourseBtn);
+            progressBar = itemView.findViewById(R.id.progressBar); // ✅ FIXED ID
+            progressText = itemView.findViewById(R.id.progressText);
         }
     }
 
     @NonNull
     @Override
-    public RegisteredCourseAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_registered_course, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RegisteredCourseAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Course course = courseList.get(position);
 
         holder.courseName.setText(course.getCourseName());
@@ -68,6 +72,11 @@ public class RegisteredCourseAdapter extends RecyclerView.Adapter<RegisteredCour
                 .load(course.getImageUrl())
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.courseImage);
+
+        // ✅ Show progress
+        int prog = course.getProgress();
+        holder.progressBar.setProgress(prog);
+        holder.progressText.setText(course.getProgress() + "%"); // Just show percentage
 
         holder.goToCourseBtn.setOnClickListener(v -> listener.onCourseClick(course));
         holder.cancelBtn.setOnClickListener(v -> listener.onCancelClick(course));

@@ -82,7 +82,7 @@ public class RegisteredCourseFragment extends Fragment {
                                     courseNames.add(courseSnap.getKey());
                                 }
 
-                                fetchCourseDetails(courseNames);
+                                fetchCourseDetails(courseNames,username);
                             }
 
                             @Override
@@ -105,8 +105,9 @@ public class RegisteredCourseFragment extends Fragment {
         });
     }
 
-    private void fetchCourseDetails(Set<String> courseNames) {
+    private void fetchCourseDetails(Set<String> courseNames, String username) {
         DatabaseReference coursesRef = FirebaseDatabase.getInstance().getReference("courses");
+        DatabaseReference progressRef = FirebaseDatabase.getInstance().getReference("users").child(username).child("progress");
 
         registeredCourses.clear();
 
@@ -116,8 +117,28 @@ public class RegisteredCourseFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Course course = snapshot.getValue(Course.class);
                     if (course != null) {
-                        registeredCourses.add(course);
-                        adapter.notifyDataSetChanged();
+                        // Fetch progress separately
+                        progressRef.child(courseName).child("progress").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot progressSnap) {
+                                Integer progress = progressSnap.getValue(Integer.class);
+                                if (progress != null) {
+                                    course.setProgress(progress);
+                                } else {
+                                    course.setProgress(0); // Default if no progress yet
+                                }
+
+                                registeredCourses.add(course);
+                                adapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                course.setProgress(0);
+                                registeredCourses.add(course);
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
                     }
                 }
 
@@ -142,6 +163,7 @@ public class RegisteredCourseFragment extends Fragment {
         bundle.putString("category", course.getCategory());
         bundle.putString("skils", course.getSkills());
         bundle.putInt("price", course.getPrice());
+        bundle.putInt("progress",course.getProgress());
 
         fragment.setArguments(bundle);
 

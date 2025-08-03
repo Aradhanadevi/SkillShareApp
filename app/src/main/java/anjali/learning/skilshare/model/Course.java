@@ -6,6 +6,15 @@ public class Course implements Serializable {
     private String description, Tutor, Category, language, location, imageUrl, courseName, skills;
     private int noofvideos, price;
     private String playlistlink;
+    private int progress = 0;
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
 
     // THIS is the only extra field you add
     private String skils;
