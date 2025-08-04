@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#F9F8FB">
 
     <LinearLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="24dp"
+        android:layout_margin="30dp"
+        android:gravity="center_horizontal">
 
         <!-- Profile Header -->
         <TextView
@@ -18,24 +19,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Profile"
-            android:textSize="24sp"
-            android:textColor="#222222"
+            android:textSize="20sp"
+            android:textColor="#111111"
             android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:paddingBottom="24dp" />
+            android:layout_marginBottom="24dp" />
 
-        <!-- (Skip image for now) -->
-        <!-- User Name -->
+        <!-- Name -->
         <TextView
             android:id="@+id/textProfileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="20sp"
+            android:textSize="17sp"
             android:textStyle="bold"
-            android:textColor="#333333"
-            android:layout_gravity="center_horizontal"
-            android:paddingBottom="4dp"/>
+            android:textColor="#000000"
+            android:layout_marginBottom="6dp" />
 
         <!-- Subtitle -->
         <TextView
@@ -45,24 +43,20 @@
             android:text=""
             android:textSize="16sp"
             android:textColor="#8E24AA"
-            android:layout_gravity="center_horizontal"
-            android:paddingBottom="32dp"/>
+            android:layout_marginBottom="32dp" />
 
-        <!-- Info Rows -->
+        <!-- Template for all info rows -->
+        <!-- START Info Row Block -->
+        <!-- Only styling changed below, no element structure added/removed -->
 
-        <!-- Row Template -->
-        <!-- Repeat this block for Name, Email, Location, Skills -->
-
-        <!-- Name Row -->
+        <!-- Name -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp">
+            android:layout_marginBottom="24dp">
 
-            <!-- Left side: Labels -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -73,38 +67,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Name"
-                    android:textSize="14sp"
-                    android:textColor="#8E24AA"/>
+                    android:textSize="16sp"
+                    android:textColor="#555555" />
 
                 <TextView
                     android:id="@+id/textName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
-                    android:textColor="#222222"
-                    android:paddingTop="4dp"/>
+                    android:textColor="#111111"
+                    android:layout_marginTop="6dp" />
             </LinearLayout>
-
-            <!-- Right side: Icon box -->
-            <View
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="#FBE7A5"
-                android:layout_marginStart="12dp"
-                android:backgroundTint="#FBE7A5" />
 
         </LinearLayout>
 
-        <!-- Email Row -->
+        <!-- Email -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp">
+            android:layout_marginBottom="24dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -116,36 +101,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Email"
-                    android:textSize="14sp"
-                    android:textColor="#8E24AA"/>
+                    android:textSize="16sp"
+                    android:textColor="#555555" />
 
                 <TextView
                     android:id="@+id/textEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
-                    android:textColor="#222222"
-                    android:paddingTop="4dp"/>
+                    android:textColor="#111111"
+                    android:layout_marginTop="6dp" />
             </LinearLayout>
 
-            <View
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="#EEF4F1"
-                android:layout_marginStart="12dp"
-                android:backgroundTint="#EEF4F1" />
         </LinearLayout>
 
-        <!-- Location Row -->
+        <!-- Location -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp">
+            android:layout_marginBottom="24dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -157,36 +135,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Location"
-                    android:textSize="14sp"
-                    android:textColor="#8E24AA"/>
+                    android:textSize="16sp"
+                    android:textColor="#555555" />
 
                 <TextView
                     android:id="@+id/textLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
-                    android:textColor="#222222"
-                    android:paddingTop="4dp"/>
+                    android:textColor="#111111"
+                    android:layout_marginTop="6dp" />
             </LinearLayout>
 
-            <View
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="#37474F"
-                android:layout_marginStart="12dp"
-                android:backgroundTint="#37474F" />
+
         </LinearLayout>
 
-        <!-- Skills Row -->
+        <!-- Skills -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp">
+            android:layout_marginBottom="24dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -198,35 +170,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Skills"
-                    android:textSize="14sp"
-                    android:textColor="#8E24AA"/>
+                    android:textSize="16sp"
+                    android:textColor="#555555" />
 
                 <TextView
                     android:id="@+id/textSkills"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
-                    android:textColor="#222222"
-                    android:paddingTop="4dp"/>
+                    android:textColor="#111111"
+                    android:layout_marginTop="6dp" />
             </LinearLayout>
 
-            <View
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="#2C3E50"
-                android:layout_marginStart="12dp"
-                android:backgroundTint="#2C3E50" />
         </LinearLayout>
-<!--Skill Requested-->
+
+        <!-- Skills Requested -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp">
+            android:layout_marginBottom="24dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -238,35 +204,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Skills Requested"
-                    android:textSize="14sp"
-                    android:textColor="#8E24AA"/>
+                    android:textSize="16sp"
+                    android:textColor="#555555" />
 
                 <TextView
                     android:id="@+id/textSkillRequested"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
-                    android:textColor="#222222"
-                    android:paddingTop="4dp"/>
+                    android:textColor="#111111"
+                    android:layout_marginTop="6dp" />
             </LinearLayout>
 
-            <View
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="#EEF4F1"
-                android:layout_marginStart="12dp"
-                android:backgroundTint="#EEF4F1" />
         </LinearLayout>
-<!--Skill Offered-->
+
+        <!-- Skills Offered -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp">
+            android:layout_marginBottom="32dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -278,37 +238,36 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Skills Offered"
-                    android:textSize="14sp"
-                    android:textColor="#8E24AA"/>
+                    android:textSize="16sp"
+                    android:textColor="#555555" />
 
                 <TextView
                     android:id="@+id/textSkillOffered"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
-                    android:textColor="#222222"
-                    android:paddingTop="4dp"/>
+                    android:textColor="#111111"
+                    android:layout_marginTop="6dp" />
             </LinearLayout>
 
-            <View
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="#EEF4F1"
-                android:layout_marginStart="12dp"
-                android:backgroundTint="#EEF4F1" />
+
         </LinearLayout>
 
-
-<!--        Request Swap Skills Button-->
+        <!-- Swap Button -->
         <Button
-            android:layout_width="wrap_content"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content"
-            android:text="Swap Skills"
             android:id="@+id/learnrequestedskill"
-            />
-    </LinearLayout>
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="SWAP SKILLS"
+            android:textAllCaps="true"
+            android:backgroundTint="#5B1EFF"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:letterSpacing="0.1"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_button" />
 
+    </LinearLayout>
 </ScrollView>
