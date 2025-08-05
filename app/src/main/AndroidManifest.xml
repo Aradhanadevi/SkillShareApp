@@ -26,6 +26,7 @@
         <activity
             android:name=".MessageRequestActivity"
             android:exported="false" />
+
         <activity
             android:name=".LearnRequestedSkill"
             android:exported="false" />
@@ -35,6 +36,10 @@
         <activity
             android:name=".nav_header"
             android:exported="false" />
+
+        <activity android:name=".BrainGameActivity" />
+        <activity android:name="DailyQuizActivity"/>
+
         <activity
             android:name=".SignUpActivity"
             android:exported="false"

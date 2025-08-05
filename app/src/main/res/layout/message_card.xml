@@ -44,12 +44,14 @@
                 android:id="@+id/btnAccept"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/electric_purple"
                 android:text="Accept" />
 
             <Button
                 android:id="@+id/btnDecline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FF1400"
                 android:text="Decline"
                 android:layout_marginStart="8dp" />
         </LinearLayout>

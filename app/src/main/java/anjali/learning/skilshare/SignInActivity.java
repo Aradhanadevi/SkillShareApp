@@ -67,15 +67,24 @@ public class SignInActivity extends AppCompatActivity {
                         mAuth.signInWithEmailAndPassword(email, Password)
                                 .addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(SignInActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                                        getSharedPreferences("SkillSharePrefs", MODE_PRIVATE)
+
+                                        // ✅ XP & Stars Setup
+                                        checkAndSetXPandStars(Username);
+
+                                        // Save username
+                                        getSharedPreferences("SkillzEraPrefs", MODE_PRIVATE)
                                                 .edit()
-                                                .putString("currentUsername", Username)
+                                                .putString("username", Username)
                                                 .apply();
+
+
+                                        Toast.makeText(SignInActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+
                                         Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                                        intent.putExtra("username", Username); // still pass username
+                                        intent.putExtra("username", Username);
                                         startActivity(intent);
                                         finish();
+
                                     } else {
                                         Toast.makeText(SignInActivity.this, "Auth failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                     }
@@ -91,6 +100,30 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(SignInActivity.this, "Database Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // 🔥 New method to check and set XP & Stars
+    private void checkAndSetXPandStars(String Username) {
+        DatabaseReference userRef = databaseReference.child(Username);
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    if (!snapshot.hasChild("xp")) {
+                        userRef.child("xp").setValue(0);
+                    }
+                    if (!snapshot.hasChild("stars")) {
+                        userRef.child("stars").setValue(0);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Optional: Handle errors
             }
         });
     }

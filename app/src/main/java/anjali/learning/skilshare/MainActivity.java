@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+
         // Bottom Navigation
         bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnItemSelectedListener(item -> {
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             return true;
         });
+
 
 //        Intent intent = new Intent(MainActivity.this, ChatActivity.class);
 //        startActivity(intent);

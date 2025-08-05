@@ -62,7 +62,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="8dp"
             android:paddingHorizontal="24dp"
-            android:backgroundTint="@color/teal_700"
+            android:backgroundTint="@color/electric_purple"
             android:textColor="@android:color/white"
             android:textStyle="bold"
             android:elevation="2dp" />

@@ -3,33 +3,25 @@ package anjali.learning.skilshare;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class SignUpActivity extends AppCompatActivity {
 
     Button Signup;
     TextView redirectToSignin;
-    EditText username, name, password, confirmpassword, skils,skilloffered,skillrequested, location, email;
-    CheckBox accepttandc,alsowanttutorrights;
+    EditText username, name, password, confirmpassword, skils, skilloffered, skillrequested, location, email;
+    CheckBox accepttandc, alsowanttutorrights;
 
     FirebaseAuth mAuth;
     DatabaseReference database;
-    //comment
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,9 +37,9 @@ public class SignUpActivity extends AppCompatActivity {
         email = findViewById(R.id.email);
         accepttandc = findViewById(R.id.accepttandc);
         name = findViewById(R.id.name);
-        skilloffered=findViewById(R.id.skillsOffered);
-        skillrequested=findViewById(R.id.skillsRequested);
-        alsowanttutorrights=findViewById(R.id.wanttutorrights);
+        skilloffered = findViewById(R.id.skillsOffered);
+        skillrequested = findViewById(R.id.skillsRequested);
+        alsowanttutorrights = findViewById(R.id.wanttutorrights);
 
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance().getReference("users");
@@ -59,12 +51,12 @@ public class SignUpActivity extends AppCompatActivity {
             String Password = password.getText().toString().trim();
             String ConfirmPassword = confirmpassword.getText().toString().trim();
             String Skils = skils.getText().toString().trim();
-            String SkillOffered=skilloffered.getText().toString().trim();
-            String SkillRequested=skillrequested.getText().toString().trim();
+            String SkillOffered = skilloffered.getText().toString().trim();
+            String SkillRequested = skillrequested.getText().toString().trim();
             String Location = location.getText().toString().trim();
             String emailPattern = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$";
 
-            if (Name.isEmpty() || Username.isEmpty() || Password.isEmpty() || ConfirmPassword.isEmpty() || Skils.isEmpty() || Location.isEmpty() || Email.isEmpty()||SkillOffered.isEmpty()||SkillRequested.isEmpty()) {
+            if (Name.isEmpty() || Username.isEmpty() || Password.isEmpty() || ConfirmPassword.isEmpty() || Skils.isEmpty() || Location.isEmpty() || Email.isEmpty() || SkillOffered.isEmpty() || SkillRequested.isEmpty()) {
                 Toast.makeText(SignUpActivity.this, "Please enter all details", Toast.LENGTH_SHORT).show();
             } else if (!Email.matches(emailPattern)) {
                 email.setError("Enter valid email");
@@ -73,25 +65,32 @@ public class SignUpActivity extends AppCompatActivity {
             } else if (!accepttandc.isChecked()) {
                 Toast.makeText(SignUpActivity.this, "Please accept T&C", Toast.LENGTH_SHORT).show();
             } else {
-                // Create user in FirebaseAuth first
                 mAuth.createUserWithEmailAndPassword(Email, Password)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                // Then store user info in Realtime DB under chosen username
+                                // 🟢 Gamification Fields
+                                String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
                                 Map<String, Object> userMap = new HashMap<>();
                                 userMap.put("name", Name);
                                 userMap.put("username", Username);
                                 userMap.put("email", Email);
-                                userMap.put("password", Password); // avoid storing plaintext in production
+                                userMap.put("password", Password);
                                 userMap.put("skills", Skils);
-                                userMap.put("skilloffered",SkillOffered);
-                                userMap.put("skillrequested",SkillRequested);
+                                userMap.put("skilloffered", SkillOffered);
+                                userMap.put("skillrequested", SkillRequested);
                                 userMap.put("location", Location);
-// to check whether user want and has tutor rights else if checkbox is not checked both will be stored as false.
+                                userMap.put("xp", 0); // Starting XP
+                                userMap.put("streak", 1); // Start at 1
+                                userMap.put("lastLoginDate", today); // Today’s date
+                                userMap.put("isAdmin", false);
+                                userMap.put("isModerator", false);
+                                userMap.put("isTutor", false);
+
                                 if (alsowanttutorrights.isChecked()) {
                                     userMap.put("wanttutorrights", true);
-                                    userMap.put("approvedtutor", false); // default false for admin approval
-                                }else{
+                                    userMap.put("approvedtutor", false);
+                                } else {
                                     userMap.put("wanttutorrights", false);
                                     userMap.put("approvedtutor", false);
                                 }
@@ -102,9 +101,8 @@ public class SignUpActivity extends AppCompatActivity {
                                             startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                                             finish();
                                         })
-                                        .addOnFailureListener(e ->
-                                        {
-                                            Log.e("SignupError", "Signup failed", task.getException());
+                                        .addOnFailureListener(e -> {
+                                            Log.e("SignupError", "Signup failed", e);
                                             Toast.makeText(SignUpActivity.this, "Failed to save data", Toast.LENGTH_SHORT).show();
                                         });
                             } else {

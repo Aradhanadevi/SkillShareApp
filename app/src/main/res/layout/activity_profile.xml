@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textSize="16sp"
-            android:textColor="#8E24AA"
+            android:textColor="#424242"
             android:layout_marginBottom="32dp" />
 
         <!-- Template for all info rows -->
@@ -260,14 +260,13 @@
             android:id="@+id/learnrequestedskill"
             android:layout_width="match_parent"
             android:layout_height="56dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#6200EE"
+            android:letterSpacing="0.1"
             android:text="SWAP SKILLS"
             android:textAllCaps="true"
-            android:backgroundTint="#5B1EFF"
             android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:letterSpacing="0.1"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/rounded_button" />
+            android:textStyle="bold" />
 
     </LinearLayout>
 </ScrollView>

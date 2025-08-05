@@ -79,7 +79,7 @@
             android:layout_height="wrap_content" />
 
         <Button
-            android:backgroundTint="@color/black"
+            android:backgroundTint="@color/swamp_blue"
             android:id="@+id/uploadCourseBtn"
             android:text="Upload Course"
             android:layout_width="match_parent"
