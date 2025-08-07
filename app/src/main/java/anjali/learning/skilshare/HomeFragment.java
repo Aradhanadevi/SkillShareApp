@@ -65,6 +65,16 @@ public class HomeFragment extends Fragment {
 
     private String currentUsername;
 
+    Spinner spinnerLanguage;
+    String[] languages = {"All", "Gujarati", "Hindi", "English", "Marathi", "Punjabi", "Bengali", "Others"};
+    Spinner spinnerCategory;
+    private ArrayAdapter<String> categoryAdapter;
+    private List<String> categories;
+    String[] categoryList = {"Web Development", "Android", "Data Science","flutter","dsa","dance","design","python","App Development","communication","cooking","coding","soft skills"};
+
+
+    CourseAdapter courseAdapter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -82,6 +92,8 @@ public class HomeFragment extends Fragment {
         viewPagerFeatured = view.findViewById(R.id.viewPagerFeatured);
         etSearchBar = view.findViewById(R.id.etSearchBar);
         ivSearchIcon = view.findViewById(R.id.ivSearchIcon);
+         spinnerLanguage = view.findViewById(R.id.spinnerLanguage);
+        spinnerCategory=view.findViewById(R.id.spinnerCategory);
         fabBot = view.findViewById(R.id.fabBot);
         fabMessage = view.findViewById(R.id.fabMessages);
         cardDailyQuiz = view.findViewById(R.id.cardDailyQuiz);
@@ -102,6 +114,89 @@ public class HomeFragment extends Fragment {
         featuredList = new ArrayList<>();
         featuredAdapter = new FeaturedCourseAdapter(featuredList, getContext(), this::updateFeaturedDetails);
         viewPagerFeatured.setAdapter(featuredAdapter);
+
+
+        //setting spinner language
+        ArrayAdapter<String> langAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, languages);
+        langAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerLanguage.setAdapter(langAdapter);
+
+        //setting category adapter
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, categoryList);
+        langAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategory.setAdapter(categoryAdapter);
+
+        spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedLanguage = languages[position].toLowerCase();
+
+                DatabaseReference courseRef = FirebaseDatabase.getInstance().getReference("courses");
+
+                courseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        courseList.clear();
+
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Course course = snap.getValue(Course.class);
+                            if (course != null && course.getLanguage() != null) {
+                                String courseLang = course.getLanguage().toLowerCase();
+                                if (selectedLanguage.equals("all") || courseLang.equals(selectedLanguage)) {
+                                    courseList.add(course);
+                                }
+                            }
+                        }
+
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(getContext(), "Language filter failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+        spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedCategory = categoryList[position].toLowerCase();
+
+                DatabaseReference courseRef = FirebaseDatabase.getInstance().getReference("courses");
+
+                courseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        courseList.clear();
+
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Course course = snap.getValue(Course.class);
+                            if (course != null && course.getCategory() != null) {
+                                String courseLang = course.getCategory().toLowerCase();
+                                if (selectedCategory.equals("all") || courseLang.equals(selectedCategory)) {
+                                    courseList.add(course);
+                                }
+                            }
+                        }
+
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(getContext(), "Language filter failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
 
         // Launch quiz and refresh XP when done
         quizLauncher = registerForActivityResult(
