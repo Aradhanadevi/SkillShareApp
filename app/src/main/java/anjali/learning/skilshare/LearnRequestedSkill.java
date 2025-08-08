@@ -75,7 +75,7 @@ public class LearnRequestedSkill extends AppCompatActivity {
                                 String name = userSnap.child("name").getValue(String.class);
                                 String email = userSnap.child("email").getValue(String.class);
                                 String username = userSnap.child("username").getValue(String.class);
-                                tutorList.add(new UserModel(name, email, username));
+                                tutorList.add(new UserModel(name, email, username, 0, 0, 0));
                                 matched = true;
                                 break;
                             }

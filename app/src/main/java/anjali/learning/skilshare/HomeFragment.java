@@ -2,11 +2,6 @@ package anjali.learning.skilshare;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,9 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.*;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import anjali.learning.skilshare.Adapter.CourseAdapter;
@@ -36,21 +33,19 @@ import anjali.learning.skilshare.model.Course;
 public class HomeFragment extends Fragment {
 
     private RecyclerView recyclerCourses;
-    private ArrayList<Course> courseList;
+    private ArrayList<Course> courseList = new ArrayList<>();
     private CourseAdapter adapter;
 
     private ProgressBar xpProgress;
-    private TextView xpStatus;
+    private TextView xpStatus, streakTextView;
 
-    private int currentXP = 0;
-    private int xpGoal = 100;
+    private int currentXP = 0, xpGoal = 100;
 
     private ViewPager2 viewPagerFeatured;
-    private ArrayList<Course> featuredList;
+    private ArrayList<Course> featuredList = new ArrayList<>();
     private FeaturedCourseAdapter featuredAdapter;
 
     private TextView featuredTitle, featuredDescription, featuredDuration;
-    private TextView streakTextView;
 
     private Handler carouselHandler = new Handler(Looper.getMainLooper());
     private int carouselIndex = 0;
@@ -58,22 +53,19 @@ public class HomeFragment extends Fragment {
     private AutoCompleteTextView etSearchBar;
     private ImageView ivSearchIcon;
     private FloatingActionButton fabBot, fabMessage;
-
     private View cardDailyQuiz;
 
     private ActivityResultLauncher<Intent> quizLauncher;
 
     private String currentUsername;
 
-    Spinner spinnerLanguage;
-    String[] languages = {"All", "Gujarati", "Hindi", "English", "Marathi", "Punjabi", "Bengali", "Others"};
-    Spinner spinnerCategory;
-    private ArrayAdapter<String> categoryAdapter;
-    private List<String> categories;
-    String[] categoryList = {"Web Development", "Android", "Data Science","flutter","dsa","dance","design","python","App Development","communication","cooking","coding","soft skills"};
+    // Removed spinner declarations
 
+    private final String[] languages = {"All", "Gujarati", "Hindi", "English", "Marathi", "Punjabi", "Bengali", "Others"};
+    private final String[] categoryList = {"All","Web Development", "Android", "Data Science","flutter","dsa","dance","design","python","App Development","communication","cooking","coding","soft skills"};
 
-    CourseAdapter courseAdapter;
+    private String selectedLanguage = "all";
+    private String selectedCategory = "all";
 
     @Nullable
     @Override
@@ -81,9 +73,9 @@ public class HomeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        streakTextView = view.findViewById(R.id.streakTextView);
 
         // Initialize views
+        streakTextView = view.findViewById(R.id.streakTextView);
         xpProgress = view.findViewById(R.id.xpProgress);
         xpStatus = view.findViewById(R.id.xpStatus);
         featuredTitle = view.findViewById(R.id.featuredCourseTitle);
@@ -92,125 +84,123 @@ public class HomeFragment extends Fragment {
         viewPagerFeatured = view.findViewById(R.id.viewPagerFeatured);
         etSearchBar = view.findViewById(R.id.etSearchBar);
         ivSearchIcon = view.findViewById(R.id.ivSearchIcon);
-         spinnerLanguage = view.findViewById(R.id.spinnerLanguage);
-        spinnerCategory=view.findViewById(R.id.spinnerCategory);
+
+        LinearLayout layoutLanguageFilters = view.findViewById(R.id.layoutLanguageFilters);
+        LinearLayout layoutCategoryFilters = view.findViewById(R.id.layoutCategoryFilters);
+
         fabBot = view.findViewById(R.id.fabBot);
         fabMessage = view.findViewById(R.id.fabMessages);
         cardDailyQuiz = view.findViewById(R.id.cardDailyQuiz);
-
-        // Username
-        currentUsername = requireContext()
-                .getSharedPreferences("SkillSharePrefs", MODE_PRIVATE)
-                .getString("currentUsername", null);
-
-        // Setup RecyclerView
         recyclerCourses = view.findViewById(R.id.recyclerCourses);
+
+        currentUsername = requireContext().getSharedPreferences("SkillzEraPrefs", MODE_PRIVATE)
+                .getString("username", null);
+
         recyclerCourses.setLayoutManager(new LinearLayoutManager(getContext()));
-        courseList = new ArrayList<>();
         adapter = new CourseAdapter(courseList);
         recyclerCourses.setAdapter(adapter);
 
-        // Featured courses
-        featuredList = new ArrayList<>();
         featuredAdapter = new FeaturedCourseAdapter(featuredList, getContext(), this::updateFeaturedDetails);
         viewPagerFeatured.setAdapter(featuredAdapter);
 
+        // Setup horizontal filter buttons for language and category
+        setupFilterButtons(layoutLanguageFilters, languages, true);
+        setupFilterButtons(layoutCategoryFilters, categoryList, false);
 
-        //setting spinner language
-        ArrayAdapter<String> langAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, languages);
-        langAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerLanguage.setAdapter(langAdapter);
+        setupQuizLauncher();
+        setupListeners();
+        setupSearchBot();
 
-        //setting category adapter
-        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, categoryList);
-        langAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCategory.setAdapter(categoryAdapter);
+        loadFeaturedCourses();
+        loadUserSkillsAndFilterCourses();
+        fetchAndShowStreak();
+        fetchAndShowXP();
 
-        spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedLanguage = languages[position].toLowerCase();
+        return view;
+    }
 
-                DatabaseReference courseRef = FirebaseDatabase.getInstance().getReference("courses");
+    private void setupFilterButtons(LinearLayout container, String[] items, boolean isLanguage) {
+        container.removeAllViews();
 
-                courseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        courseList.clear();
+        for (String item : items) {
+            Button btn = new Button(getContext());
+            btn.setText(item);
+            btn.setAllCaps(false);
+            btn.setBackgroundResource(R.drawable.rounded_bg);
+            btn.setTextColor(getResources().getColor(android.R.color.black));
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(8, 0, 8, 0);
+            btn.setLayoutParams(params);
 
-                        for (DataSnapshot snap : snapshot.getChildren()) {
-                            Course course = snap.getValue(Course.class);
-                            if (course != null && course.getLanguage() != null) {
-                                String courseLang = course.getLanguage().toLowerCase();
-                                if (selectedLanguage.equals("all") || courseLang.equals(selectedLanguage)) {
-                                    courseList.add(course);
-                                }
-                            }
-                        }
-
-                        adapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(getContext(), "Language filter failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            // Highlight "All" filter button initially
+            if (item.equalsIgnoreCase("all")) {
+                btn.setBackgroundResource(R.drawable.selected_filter_bg);
+                btn.setTextColor(getResources().getColor(android.R.color.white));
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-        spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedCategory = categoryList[position].toLowerCase();
+            btn.setOnClickListener(v -> {
+                // Reset all buttons in this container to default
+                for (int i = 0; i < container.getChildCount(); i++) {
+                    View child = container.getChildAt(i);
+                    if (child instanceof Button) {
+                        child.setBackgroundResource(R.drawable.rounded_bg);
+                        ((Button)child).setTextColor(getResources().getColor(android.R.color.black));
+                    }
+                }
+                // Highlight selected button
+                btn.setBackgroundResource(R.drawable.selected_filter_bg);
+                btn.setTextColor(getResources().getColor(android.R.color.white));
 
-                DatabaseReference courseRef = FirebaseDatabase.getInstance().getReference("courses");
+                if (isLanguage) {
+                    selectedLanguage = item.toLowerCase();
+                } else {
+                    selectedCategory = item.toLowerCase();
+                }
+                filterCourses();
+            });
 
-                courseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        courseList.clear();
+            container.addView(btn);
+        }
+    }
 
-                        for (DataSnapshot snap : snapshot.getChildren()) {
-                            Course course = snap.getValue(Course.class);
-                            if (course != null && course.getCategory() != null) {
-                                String courseLang = course.getCategory().toLowerCase();
-                                if (selectedCategory.equals("all") || courseLang.equals(selectedCategory)) {
-                                    courseList.add(course);
-                                }
-                            }
+    private void filterCourses() {
+        DatabaseReference courseRef = FirebaseDatabase.getInstance().getReference("courses");
+        courseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
+                courseList.clear();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Course course = snap.getValue(Course.class);
+                    if (course != null) {
+                        boolean matchesLang = selectedLanguage.equals("all") ||
+                                (course.getLanguage() != null &&
+                                        course.getLanguage().toLowerCase().equals(selectedLanguage));
+                        boolean matchesCategory = selectedCategory.equals("all") ||
+                                (course.getCategory() != null &&
+                                        course.getCategory().toLowerCase().equals(selectedCategory));
+                        if (matchesLang && matchesCategory) {
+                            courseList.add(course);
                         }
-
-                        adapter.notifyDataSetChanged();
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(getContext(), "Language filter failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                }
+                adapter.notifyDataSetChanged();
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            @Override public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Filter failed", Toast.LENGTH_SHORT).show();
+            }
         });
+    }
 
-
-        // Launch quiz and refresh XP when done
-        quizLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
+    private void setupQuizLauncher() {
+        quizLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         if (data != null && data.getBooleanExtra("quizCompleted", false)) {
                             fetchAndShowXP();
-
-                            // 👇 Add today's date as lastActiveDate
                             String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                                     .format(Calendar.getInstance().getTime());
-
                             FirebaseDatabase.getInstance()
                                     .getReference("users")
                                     .child(currentUsername)
@@ -219,8 +209,9 @@ public class HomeFragment extends Fragment {
                         }
                     }
                 });
+    }
 
-
+    private void setupListeners() {
         cardDailyQuiz.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), DailyQuizActivity.class);
             intent.putExtra("username", currentUsername);
@@ -234,47 +225,41 @@ public class HomeFragment extends Fragment {
         });
 
         fabBot.setOnClickListener(v -> openChatBot());
+    }
 
-        // Load everything
-        setupSearchBot();
-        loadFeaturedCourses();
-        loadUserSkillsAndFilterCourses();
-        fetchAndShowXP();
+    private void fetchAndShowStreak() {
+        if (currentUsername == null || currentUsername.isEmpty()) return;
 
-        return view;
+        FirebaseDatabase.getInstance().getReference("users").child(currentUsername)
+                .child("streak").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Long streak = snapshot.getValue(Long.class);
+                        streakTextView.setText("🔥 Streak: " + (streak != null ? streak : 0) + " days");
+                    }
+                    @Override public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(getContext(), "Failed to load streak", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void fetchAndShowXP() {
         if (currentUsername == null) return;
 
-        DatabaseReference userRef = FirebaseDatabase.getInstance()
-                .getReference("users")
-                .child(currentUsername);
+        FirebaseDatabase.getInstance().getReference("users").child(currentUsername)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Long streak = snapshot.child("streak").getValue(Long.class);
+                        streakTextView.setText("🔥 Streak: " + (streak != null ? streak : 0) + " days");
 
-
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Integer xp = snapshot.child("xp").getValue(Integer.class);
-                currentXP = (xp != null) ? xp : 0;
-
-                Long streak = snapshot.child("streak").getValue(Long.class);
-                if (streak == null) streak = 0L;
-                streakTextView.setText("🔥 Streak: " + streak + " days");
-
-                String lastActive = snapshot.child("lastActiveDate").getValue(String.class);
-                checkStreakReset(userRef, lastActive, streak);
-
-                updateXPUI();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Failed to load XP", Toast.LENGTH_SHORT).show();
-            }
-        });
+                        Long xp = snapshot.child("xp").getValue(Long.class);
+                        currentXP = xp != null ? xp.intValue() : 0;
+                        updateXPUI();
+                    }
+                    @Override public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(getContext(), "Failed to load XP and streak", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
-
 
     private void updateXPUI() {
         xpProgress.setMax(xpGoal);
@@ -284,34 +269,28 @@ public class HomeFragment extends Fragment {
 
     private void openChatBot() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+        if (user == null) return;
 
-            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot userSnap : snapshot.getChildren()) {
-                        String email = userSnap.child("email").getValue(String.class);
-                        if (email != null && email.equals(user.getEmail())) {
-                            String name = userSnap.child("name").getValue(String.class);
-                            String skills = userSnap.child("skills").getValue(String.class);
-
-                            Bundle bundle = new Bundle();
-                            bundle.putString("name", name);
-                            bundle.putString("skills", skills);
-
-                            ChatBottomSheet bottomSheet = new ChatBottomSheet();
-                            bottomSheet.setArguments(bundle);
-                            bottomSheet.show(getParentFragmentManager(), "chat");
-                            break;
-                        }
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot userSnap : snapshot.getChildren()) {
+                    String email = userSnap.child("email").getValue(String.class);
+                    if (email != null && email.equals(user.getEmail())) {
+                        String name = userSnap.child("name").getValue(String.class);
+                        String skills = userSnap.child("skills").getValue(String.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("name", name);
+                        bundle.putString("skills", skills);
+                        ChatBottomSheet bottomSheet = new ChatBottomSheet();
+                        bottomSheet.setArguments(bundle);
+                        bottomSheet.show(getParentFragmentManager(), "chat");
+                        break;
                     }
                 }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {}
-            });
-        }
+            }
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
 
     private void setupSearchBot() {
@@ -320,31 +299,27 @@ public class HomeFragment extends Fragment {
                 getContext(),
                 R.layout.item_dropdown,
                 R.id.dropdownItem,
-                courseNames
-        );
+                courseNames);
 
         etSearchBar.setAdapter(autoAdapter);
         etSearchBar.setThreshold(1);
 
-        DatabaseReference courseRef = FirebaseDatabase.getInstance().getReference("courses");
-        courseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                courseNames.clear();
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    Course course = snap.getValue(Course.class);
-                    if (course != null && course.getCourseName() != null) {
-                        courseNames.add(course.getCourseName());
+        FirebaseDatabase.getInstance().getReference("courses")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        courseNames.clear();
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Course course = snap.getValue(Course.class);
+                            if (course != null && course.getCourseName() != null) {
+                                courseNames.add(course.getCourseName());
+                            }
+                        }
+                        autoAdapter.notifyDataSetChanged();
                     }
-                }
-                autoAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Failed to load suggestions", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(getContext(), "Failed to load suggestions", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         etSearchBar.setOnItemClickListener((parent, view, position, id) -> {
             String selected = (String) parent.getItemAtPosition(position);
@@ -362,133 +337,101 @@ public class HomeFragment extends Fragment {
     }
 
     private void searchCourses(String query) {
-        DatabaseReference courseRef = FirebaseDatabase.getInstance().getReference("courses");
-
-        courseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<Course> resultList = new ArrayList<>();
-
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    Course course = snap.getValue(Course.class);
-                    if (course != null && course.getCourseName() != null &&
-                            course.getCourseName().toLowerCase().contains(query.toLowerCase())) {
-                        resultList.add(course);
+        FirebaseDatabase.getInstance().getReference("courses")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ArrayList<Course> resultList = new ArrayList<>();
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Course course = snap.getValue(Course.class);
+                            if (course != null && course.getCourseName() != null &&
+                                    course.getCourseName().toLowerCase().contains(query.toLowerCase())) {
+                                resultList.add(course);
+                            }
+                        }
+                        if (resultList.isEmpty()) {
+                            Toast.makeText(getContext(), "No course found", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("courses", resultList);
+                        SearchFragment searchFragment = new SearchFragment();
+                        searchFragment.setArguments(bundle);
+                        requireActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, searchFragment)
+                                .addToBackStack(null)
+                                .commit();
                     }
-                }
-
-                if (resultList.isEmpty()) {
-                    Toast.makeText(getContext(), "No course found", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("courses", resultList);
-
-                SearchFragment searchFragment = new SearchFragment();
-                searchFragment.setArguments(bundle);
-
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, searchFragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Search failed", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void updateFeaturedDetails(Course course) {
-        featuredTitle.setText(course.getCourseName());
-        featuredDescription.setText(course.getDescription());
-        featuredDuration.setText(course.getNoofvideos() + " videos");
+                    @Override public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(getContext(), "Search failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void loadUserSkillsAndFilterCourses() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) return;
 
-        String currentUserEmail = user.getEmail();
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
-
-        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot userSnap : snapshot.getChildren()) {
-                    String email = userSnap.child("email").getValue(String.class);
-                    if (email != null && email.equals(currentUserEmail)) {
-                        String userSkills = userSnap.child("skills").getValue(String.class);
-                        if (userSkills != null && !userSkills.isEmpty()) {
-                            fetchCoursesMatchingSkills(userSkills);
-                        }
-                        break;
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        });
-    }
-
-    private void fetchCoursesMatchingSkills(String userSkills) {
-        DatabaseReference courseRef = FirebaseDatabase.getInstance().getReference("courses");
-
-        courseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                courseList.clear();
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    Course course = snap.getValue(Course.class);
-                    if (course != null && course.getSkills() != null) {
-                        for (String userSkill : userSkills.split(",")) {
-                            if (course.getSkills().toLowerCase().contains(userSkill.trim().toLowerCase())) {
-                                courseList.add(course);
-                                break;
+        usersRef.orderByChild("email").equalTo(user.getEmail())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot userSnap : snapshot.getChildren()) {
+                            String userSkills = userSnap.child("skills").getValue(String.class);
+                            if (userSkills != null && !userSkills.isEmpty()) {
+                                fetchCoursesMatchingSkills(userSkills);
                             }
                         }
                     }
-                }
-                adapter.notifyDataSetChanged();
-            }
+                    @Override public void onCancelled(@NonNull DatabaseError error) {}
+                });
+    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        });
+    private void fetchCoursesMatchingSkills(String userSkills) {
+        FirebaseDatabase.getInstance().getReference("courses")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        courseList.clear();
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Course course = snap.getValue(Course.class);
+                            if (course != null && course.getSkills() != null) {
+                                for (String userSkill : userSkills.split(",")) {
+                                    if (course.getSkills().toLowerCase().contains(userSkill.trim().toLowerCase())) {
+                                        courseList.add(course);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                    @Override public void onCancelled(@NonNull DatabaseError error) {}
+                });
     }
 
     private void loadFeaturedCourses() {
-        DatabaseReference courseRef = FirebaseDatabase.getInstance().getReference("courses");
-
-        courseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                featuredList.clear();
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    Course course = snap.getValue(Course.class);
-                    if (course != null && course.getNoofvideos() > 30) {
-                        featuredList.add(course);
+        FirebaseDatabase.getInstance().getReference("courses")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        featuredList.clear();
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Course course = snap.getValue(Course.class);
+                            if (course != null && course.getNoofvideos() > 30) {
+                                featuredList.add(course);
+                            }
+                        }
+                        featuredAdapter.notifyDataSetChanged();
+                        if (!featuredList.isEmpty()) {
+                            updateFeaturedDetails(featuredList.get(0));
+                            startCarousel();
+                        }
                     }
-                }
-                featuredAdapter.notifyDataSetChanged();
-                if (!featuredList.isEmpty()) {
-                    updateFeaturedDetails(featuredList.get(0));
-                    startCarousel();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        });
+                    @Override public void onCancelled(@NonNull DatabaseError error) {}
+                });
     }
 
     private void startCarousel() {
         carouselHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 if (!featuredList.isEmpty()) {
                     carouselIndex = (carouselIndex + 1) % featuredList.size();
                     viewPagerFeatured.setCurrentItem(carouselIndex, true);
@@ -505,25 +448,9 @@ public class HomeFragment extends Fragment {
         carouselHandler.removeCallbacksAndMessages(null);
     }
 
-    private void checkStreakReset(DatabaseReference userRef, String lastActive, Long currentStreak) {
-        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                .format(Calendar.getInstance().getTime());
-
-        if (lastActive == null || lastActive.isEmpty()) return;
-
-        Calendar lastCal = Calendar.getInstance();
-        Calendar todayCal = Calendar.getInstance();
-        try {
-            lastCal.setTime(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(lastActive));
-        } catch (Exception e) {
-            return;
-        }
-
-        lastCal.add(Calendar.DATE, 1); // Expected next date
-        String expectedDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(lastCal.getTime());
-
-        if (!expectedDate.equals(today)) {
-            userRef.child("streak").setValue(0);
-        }
+    private void updateFeaturedDetails(Course course) {
+        featuredTitle.setText(course.getCourseName());
+        featuredDescription.setText(course.getDescription());
+        featuredDuration.setText(course.getNoofvideos() + " videos");
     }
 }
