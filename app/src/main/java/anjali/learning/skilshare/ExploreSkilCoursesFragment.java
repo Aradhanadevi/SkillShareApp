@@ -78,12 +78,15 @@ public class ExploreSkilCoursesFragment extends Fragment {
 
                 for (DataSnapshot courseSnap : snapshot.getChildren()) {
                     Course course = courseSnap.getValue(Course.class);
-                    if (course != null) {
+                    Boolean approved = courseSnap.child("approved").getValue(Boolean.class);
+
+                    if (course != null && Boolean.TRUE.equals(approved)) { // ✅ Only if approved
                         allCourses.add(course);
                         if (course.getCourseName() != null)
                             courseNames.add(course.getCourseName());
                     }
                 }
+
 
                 courseList.clear();
                 courseList.addAll(allCourses);

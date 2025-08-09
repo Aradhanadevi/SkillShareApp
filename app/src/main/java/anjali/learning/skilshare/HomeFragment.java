@@ -67,6 +67,7 @@ public class HomeFragment extends Fragment {
     private String selectedLanguage = "all";
     private String selectedCategory = "all";
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -167,12 +168,15 @@ public class HomeFragment extends Fragment {
 
     private void filterCourses() {
         DatabaseReference courseRef = FirebaseDatabase.getInstance().getReference("courses");
+
         courseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
                 courseList.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     Course course = snap.getValue(Course.class);
-                    if (course != null) {
+                    Boolean approved = snap.child("approved").getValue(Boolean.class);
+
+                    if (course != null && Boolean.TRUE.equals(approved)) {
                         boolean matchesLang = selectedLanguage.equals("all") ||
                                 (course.getLanguage() != null &&
                                         course.getLanguage().toLowerCase().equals(selectedLanguage));
@@ -310,7 +314,8 @@ public class HomeFragment extends Fragment {
                         courseNames.clear();
                         for (DataSnapshot snap : snapshot.getChildren()) {
                             Course course = snap.getValue(Course.class);
-                            if (course != null && course.getCourseName() != null) {
+                            Boolean approved = snap.child("approved").getValue(Boolean.class);
+                            if (course != null && course.getCourseName() != null  && Boolean.TRUE.equals(approved)) {
                                 courseNames.add(course.getCourseName());
                             }
                         }
@@ -343,7 +348,9 @@ public class HomeFragment extends Fragment {
                         ArrayList<Course> resultList = new ArrayList<>();
                         for (DataSnapshot snap : snapshot.getChildren()) {
                             Course course = snap.getValue(Course.class);
+                            Boolean approved = snap.child("approved").getValue(Boolean.class);
                             if (course != null && course.getCourseName() != null &&
+                                    Boolean.TRUE.equals(approved) &&
                                     course.getCourseName().toLowerCase().contains(query.toLowerCase())) {
                                 resultList.add(course);
                             }
@@ -393,7 +400,9 @@ public class HomeFragment extends Fragment {
                         courseList.clear();
                         for (DataSnapshot snap : snapshot.getChildren()) {
                             Course course = snap.getValue(Course.class);
-                            if (course != null && course.getSkills() != null) {
+                            Boolean approved = snap.child("approved").getValue(Boolean.class);
+
+                            if (course != null && course.getSkills() != null   &&Boolean.TRUE.equals(approved)) {
                                 for (String userSkill : userSkills.split(",")) {
                                     if (course.getSkills().toLowerCase().contains(userSkill.trim().toLowerCase())) {
                                         courseList.add(course);
@@ -415,7 +424,9 @@ public class HomeFragment extends Fragment {
                         featuredList.clear();
                         for (DataSnapshot snap : snapshot.getChildren()) {
                             Course course = snap.getValue(Course.class);
-                            if (course != null && course.getNoofvideos() > 30) {
+                            Boolean approved = snap.child("approved").getValue(Boolean.class);
+
+                            if (course != null && course.getNoofvideos() > 30 &&  Boolean.TRUE.equals(approved)) {
                                 featuredList.add(course);
                             }
                         }
