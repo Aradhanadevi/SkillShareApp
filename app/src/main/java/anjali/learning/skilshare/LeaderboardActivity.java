@@ -1,6 +1,7 @@
 package anjali.learning.skilshare;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -37,10 +38,10 @@ public class LeaderboardActivity extends AppCompatActivity {
         leaderboardAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, leaderboardData);
         leaderboardListView.setAdapter(leaderboardAdapter);
 
-        usersRef = FirebaseDatabase.getInstance().getReference("users");
-
-        loadLeaderboard();
+        // Call the shared helper
+        LeaderboardHelper.loadLeaderboard(leaderboardAdapter, leaderboardData);
     }
+
 
     private void loadLeaderboard() {
         usersRef.addValueEventListener(new ValueEventListener() {
@@ -51,9 +52,13 @@ public class LeaderboardActivity extends AppCompatActivity {
                 for (DataSnapshot userSnap : snapshot.getChildren()) {
                     UserModel user = userSnap.getValue(UserModel.class);
                     if (user != null) {
+                        int calculatedLevel = GamificationHelper.calculateLevel(user.xp);
                         userList.add(user);
+                        Log.d("LeaderboardDebug", "User: " + user.name + ", XP: " + user.xp + ", Level: " + calculatedLevel);
+
                     }
                 }
+
 
                 // Sort by XP descending
                 Collections.sort(userList, new Comparator<UserModel>() {
@@ -65,7 +70,8 @@ public class LeaderboardActivity extends AppCompatActivity {
 
                 leaderboardData.clear();
                 for (UserModel user : userList) {
-                    leaderboardData.add(user.name + " - " + user.xp + " XP");
+                    int calculatedLevel = GamificationHelper.calculateLevel(user.xp);
+                    leaderboardData.add(user.name + " - Level " + calculatedLevel + " (" + user.xp + " XP)");
                 }
 
                 leaderboardAdapter.notifyDataSetChanged();
@@ -77,4 +83,5 @@ public class LeaderboardActivity extends AppCompatActivity {
             }
         });
     }
+
 }
