@@ -50,6 +50,8 @@
             android:windowSoftInputMode="adjustResize">
 
         </activity>
+        <activity android:name=".game.DinoGameActivity"/>
+        <activity android:name=".LeaderboardActivity" />
         <activity android:name=".ChatActivity" />
         <activity
             android:name=".MainActivity"

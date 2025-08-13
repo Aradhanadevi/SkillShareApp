@@ -22,6 +22,8 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 
+import anjali.learning.skilshare.game.DinoGameActivity;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
@@ -78,6 +80,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 .
                         commit();
             }
+//            else if (itemId == R.id.bottom_leaderboard) {
+//                Intent intent = new Intent(MainActivity.this, LeaderboardActivity.class);
+//                startActivity(intent);
+//            }
 
             return true;
         });
@@ -161,6 +167,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             selectedFragment = new SettingsFragment();
         } else if (id == R.id.nav_feedback) {
             selectedFragment = new FeedbackFragment();
+        }else if (id == R.id.nav_leaderboard) {
+            Intent intent = new Intent(MainActivity.this, LeaderboardActivity.class);
+            startActivity(intent);
+        }
+        else if (id == R.id.nav_dinogame) {
+            Intent intent = new Intent(MainActivity.this, DinoGameActivity.class);
+            startActivity(intent);
         }
 
         else if (id == R.id.nav_logout) {

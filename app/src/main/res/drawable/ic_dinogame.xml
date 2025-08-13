@@ -1,0 +1,19 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Simple stylized dino head shape -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M4,16 L6,14 L7,11 L9,9 L12,8 L14,9 L15,11 L17,12 L18,14 L19,15 L18,17 L15,18 L12,17 L9,16 L6,17z" />
+
+    <!-- Eye as a small circle path -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M10,11
+            m -1.2,0
+            a 1.2,1.2 0 1,0 2.4,0
+            a 1.2,1.2 0 1,0 -2.4,0" />
+</vector>

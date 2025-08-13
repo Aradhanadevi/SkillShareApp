@@ -182,6 +182,15 @@
                     android:max="3"
                     android:progressDrawable="@drawable/progress_bar_xp"
                     android:layout_marginBottom="8dp" />
+                <TextView
+                    android:id="@+id/levelText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Level 1"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="#444444" />
 
                 <TextView
                     android:id="@+id/xpStatus"

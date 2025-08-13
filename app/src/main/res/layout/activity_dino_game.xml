@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF">
+
+    <View
+        android:id="@+id/dino"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="#FF0000"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="50dp" />
+
+    <View
+        android:id="@+id/obstacle"
+        android:layout_width="45dp"
+        android:layout_height="70dp"
+        android:background="#000000"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="0dp"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/scoreText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score: 0"
+        android:textSize="24sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:padding="16dp"/>
+
+</RelativeLayout>

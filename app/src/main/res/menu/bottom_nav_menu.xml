@@ -19,4 +19,8 @@
         android:id="@+id/bottom_profile"
         android:icon="@drawable/profileimg"
         android:title="Profile" />
+<!--    <item-->
+<!--        android:id="@+id/bottom_leaderboard"-->
+<!--        android:icon="@drawable/ic_leaderboard"-->
+<!--        android:title="Leaderboard" />-->
 </menu>
