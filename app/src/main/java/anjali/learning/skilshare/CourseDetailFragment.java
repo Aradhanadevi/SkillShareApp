@@ -49,6 +49,7 @@ public class CourseDetailFragment extends Fragment {
         registerBtn = view.findViewById(R.id.registerNowBtn);
         heartIcon = view.findViewById(R.id.heartIcon);
         goToCourseBtn = view.findViewById(R.id.goToCourseBtn);
+        Button reportCourseBtn = view.findViewById(R.id.reportCourseBtn);
 
         // Get arguments
         if (getArguments() != null) {
@@ -155,6 +156,68 @@ public class CourseDetailFragment extends Fragment {
                 }
             });
         }
+
+        //Report button working
+
+
+        reportCourseBtn.setOnClickListener(v -> {
+            if (username.isEmpty()) {
+                Toast.makeText(getContext(), "Please login first", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            DatabaseReference reportRef = FirebaseDatabase.getInstance()
+                    .getReference("courses")
+                    .child(name)
+                    .child("reports")
+                    .child("reportByUsers")
+                    .child(username);
+
+            reportRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        Toast.makeText(getContext(), "You have already reported this course", Toast.LENGTH_SHORT).show();
+                    } else {
+                        reportRef.setValue(true);
+
+                        // Optional: update report count
+                        DatabaseReference countRef = FirebaseDatabase.getInstance()
+                                .getReference("courses")
+                                .child(name)
+                                .child("reports")
+                                .child("reportCount");
+
+                        countRef.runTransaction(new Transaction.Handler() {
+                            @NonNull
+                            @Override
+                            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                                Integer currentValue = currentData.getValue(Integer.class);
+                                if (currentValue == null) {
+                                    currentData.setValue(1);
+                                } else {
+                                    currentData.setValue(currentValue + 1);
+                                }
+                                return Transaction.success(currentData);
+                            }
+
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                                if (error == null) {
+                                    Toast.makeText(getContext(), "Course reported successfully", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
 
         // ✅ Register Now
         registerBtn.setOnClickListener(v -> {

@@ -14,7 +14,7 @@
     <item
         android:id="@+id/registered_courses"
         android:icon="@drawable/nav_registeredcourses"
-        android:title="Rrgistered" />
+        android:title="Registered" />
     <item
         android:id="@+id/bottom_profile"
         android:icon="@drawable/profileimg"
