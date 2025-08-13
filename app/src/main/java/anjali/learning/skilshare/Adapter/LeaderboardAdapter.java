@@ -1,4 +1,5 @@
 package anjali.learning.skilshare.Adapter;
+
 import anjali.learning.skilshare.R;
 import anjali.learning.skilshare.model.UserModel;
 import android.view.LayoutInflater;
@@ -10,13 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.ViewHolder> {
 
-    private ArrayList<UserModel> users;
+    private List<UserModel> users;  // Use interface List here for flexibility
 
-    public LeaderboardAdapter(ArrayList<UserModel> users) {
-        this.users = users;
+    public LeaderboardAdapter(List<UserModel> users) {
+        this.users = new ArrayList<>(users); // copy if you want
     }
 
     @NonNull
@@ -40,8 +42,8 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         return users.size();
     }
 
-    public void updateList(ArrayList<UserModel> newUsers) {
-        this.users = newUsers;
+    public void updateList(List<UserModel> newUsers) {
+        this.users = new ArrayList<>(newUsers);
         notifyDataSetChanged();
     }
 
