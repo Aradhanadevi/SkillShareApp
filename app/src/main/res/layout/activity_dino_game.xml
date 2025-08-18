@@ -5,8 +5,8 @@
 
     <View
         android:id="@+id/dino"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:background="#FF0000"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"

@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -50,11 +51,19 @@ public class DinoGameActivity extends AppCompatActivity {
             }
         });
     }
-
     private void startGame() {
-        handler.postDelayed(gameRunnable, 1000);
-    }
+        isGamePaused = true; // Pause until player starts
 
+        new AlertDialog.Builder(this)
+                .setTitle("Dino Game")
+                .setMessage("Get ready! Tap 'Start' to begin.")
+                .setPositiveButton("Start", (dialog, which) -> {
+                    isGamePaused = false; // Resume game
+                    handler.postDelayed(gameRunnable, 25); // Start loop immediately
+                })
+                .setCancelable(false)
+                .show();
+    }
     private Runnable gameRunnable = new Runnable() {
         @Override
         public void run() {
@@ -66,7 +75,6 @@ public class DinoGameActivity extends AppCompatActivity {
             // Move obstacle left
             obstacleX -= obstacleSpeed;
             obstacle.setX(obstacleX);
-
             // Reset obstacle when off screen
             if (obstacleX < -100) {
                 obstacleX = 1000;
@@ -77,19 +85,16 @@ public class DinoGameActivity extends AppCompatActivity {
                 if (obstacleSpeed < maxSpeed) {
                     obstacleSpeed += 0.3f;
                 }
-
                 // Quiz trigger every 5 points
                 if (score % 5 == 0) {
                     pauseGameAndShowQuiz();
                 }
             }
-
             // Collision check
             if (isColliding(dino, obstacle)) {
                 gameOver();
                 return;
             }
-
             handler.postDelayed(this, 25);
         }
     };
@@ -151,6 +156,7 @@ public class DinoGameActivity extends AppCompatActivity {
 
     private void gameOver() {
         Toast.makeText(this, "Game Over! Score: " + score, Toast.LENGTH_LONG).show();
+        startActivity(new Intent(this, StartScreenActivity.class));
         finish();
     }
 }

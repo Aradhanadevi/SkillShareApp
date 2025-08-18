@@ -50,6 +50,13 @@
             android:windowSoftInputMode="adjustResize">
 
         </activity>
+        <activity android:name=".game.StartScreenActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".game.DinoGameActivity"/>
         <activity android:name=".LeaderboardActivity" />
         <activity android:name=".ChatActivity" />
