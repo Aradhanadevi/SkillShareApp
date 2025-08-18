@@ -150,5 +150,15 @@
             android:text="Go to Course"
             android:visibility="gone" />
 
+        <Button
+            android:id="@+id/reportCourseBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Report Course"
+            android:backgroundTint="@color/purple_200"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp"/>
+
+
     </LinearLayout>
 </ScrollView>

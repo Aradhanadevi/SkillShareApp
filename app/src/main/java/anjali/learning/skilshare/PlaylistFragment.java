@@ -178,12 +178,21 @@ public class PlaylistFragment extends Fragment {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int watched = (int) snapshot.getChildrenCount();
+                int watched = 0;
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    if (!child.getKey().equals("progress")) {
+                        watched++;
+                    }
+                }
+
                 int total = videoList.size();
-                int progress = (int) ((watched * 100.0f) / videoList.size());
                 int progressPercent = 0;
+
                 if (total > 0) {
                     progressPercent = (int) ((watched * 100.0f) / total);
+                    if (progressPercent > 100) {
+                        progressPercent = 100; // safety guard
+                    }
                     courseProgressBar.setProgress(progressPercent);
                     progressText.setText("Progress: " + progressPercent + "% (" + watched + "/" + total + ")");
                 } else {
@@ -191,15 +200,14 @@ public class PlaylistFragment extends Fragment {
                     progressText.setText("No videos");
                 }
 
-
                 ref.child("progress").setValue(progressPercent);
-                courseProgressBar.setProgress(progress);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
     }
+
 
     private void markVideoAsWatched(String courseId, String videoId) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users")

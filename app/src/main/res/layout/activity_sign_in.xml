@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
-            android:hint="Full Name"
+            android:hint="Username"
             android:padding="12dp"
             android:background="@drawable/edt_bg"
             android:textColor="#000000"
