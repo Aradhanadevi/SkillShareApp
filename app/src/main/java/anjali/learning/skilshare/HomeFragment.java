@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
     private String currentUsername;
     // Removed spinner declarations
     private final String[] languages = {"All", "Gujarati", "Hindi", "English", "Marathi", "Punjabi", "Bengali", "Others"};
-    private final String[] categoryList = {"All","Web Development", "Android", "Data Science","flutter","dsa","dance","design","python","App Development","communication","cooking","coding","soft skills"};
+    private final String[] categoryList = {"All","Web Development", "Android","flutter","dsa","dance","design","python","App Development","communication","cooking","coding","soft skills"};
     private String selectedLanguage = "all";
     private String selectedCategory = "all";
 
@@ -81,8 +81,8 @@ public class HomeFragment extends Fragment {
         fabMessage = view.findViewById(R.id.fabMessages);
         cardDailyQuiz = view.findViewById(R.id.cardDailyQuiz);
         recyclerCourses = view.findViewById(R.id.recyclerCourses);
-        currentUsername = requireContext().getSharedPreferences("SkillzEraPrefs", MODE_PRIVATE)
-                .getString("username", null);
+        currentUsername = requireContext().getSharedPreferences("SkillSharePrefs", MODE_PRIVATE)
+                .getString("currentUsername", null);
         recyclerCourses.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new CourseAdapter(courseList);
         recyclerCourses.setAdapter(adapter);
