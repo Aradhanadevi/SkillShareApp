@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -103,89 +104,27 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
     }
 
     private void sendToBot(String userMessage, String userName, String userSkills) {
-        MediaType mediaType = MediaType.parse("application/json");
+        ChatBotApiHelper helper = new ChatBotApiHelper();
+        helper.sendMessage(userMessage, name, skills, new ChatBotApiHelper.ChatBotCallback() {
+            @Override
+            public void onSuccess(String reply) {
+                requireActivity().runOnUiThread(() -> addMessage(reply, false));
+            }
 
-        JSONObject systemMessage = new JSONObject();
-        JSONObject userMessageObj = new JSONObject();
-        try {
-            String introPrompt = "You are an AI assistant inside a Skillshare-style app. " +
-                    "The user's name is \"" + userName + "\" and they are interested in: " + userSkills + ". " +
-                    "You help the user by answering questions about the number of courses available on different topics or skills, " +
-                    "summarizing specific courses when requested, and suggesting 3 relevant courses based on their skills. " +
-                    "If the user asks how many courses there are on a topic, provide a friendly and helpful answer. " +
-                    "Be concise and clear in all responses.";
-
-
-            systemMessage.put("role", "system");
-            systemMessage.put("content", introPrompt);
-
-            userMessageObj.put("role", "user");
-            userMessageObj.put("content", userMessage);
-
-            org.json.JSONArray messagesArray = new org.json.JSONArray();
-            messagesArray.put(systemMessage);
-            messagesArray.put(userMessageObj);
-
-            JSONObject requestBodyJson = new JSONObject();
-            requestBodyJson.put("model", "mistralai/mistral-7b-instruct");
-            requestBodyJson.put("messages", messagesArray);
-
-            RequestBody body = RequestBody.create(requestBodyJson.toString(), mediaType);
-
-            Request request = new Request.Builder()
-                    .url("https://openrouter.ai/api/v1/chat/completions")
-                    .addHeader("Authorization", "Bearer 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")
-                    .addHeader("Content-Type", "application/json")
-                    .post(body)
-                    .build();
-
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    requireActivity().runOnUiThread(() ->
-                            Toast.makeText(getContext(), "Network Error", Toast.LENGTH_SHORT).show()
-                    );
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        String responseStr = response.body().string();
-                        String botReply = "No reply.";
-                        try {
-                            JSONObject jsonObject = new JSONObject(responseStr);
-                            JSONObject messageObj = jsonObject
-                                    .getJSONArray("choices")
-                                    .getJSONObject(0)
-                                    .getJSONObject("message");
-                            botReply = messageObj.getString("content");
-                        } catch (JSONException e) {
-                            botReply = "Failed to parse bot response.";
-                        }
-
-                        String finalBotReply = botReply;
-                        requireActivity().runOnUiThread(() -> addMessage(finalBotReply, false));
-                    } else {
-                        requireActivity().runOnUiThread(() ->
-                                Toast.makeText(getContext(), "Error: " + response.code(), Toast.LENGTH_SHORT).show()
-                        );
-                    }
-                }
-            });
-
-        } catch (JSONException e) {
-            requireActivity().runOnUiThread(() ->
-                    Toast.makeText(getContext(), "Error building request", Toast.LENGTH_SHORT).show()
-            );
-        }
+            @Override
+            public void onFailure(Exception e) {
+                requireActivity().runOnUiThread(() ->
+                        addMessage("⚠️ Bot Error: " + e.getMessage(), false)
+                );
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
         if (getDialog() != null) {
-            View bottomSheet = getDialog().findViewById(
-                    com.google.android.material.R.id.design_bottom_sheet);
+            View bottomSheet = getDialog().findViewById(R.id.bottom_sheet_root); // ✅ use your id
             if (bottomSheet != null) {
                 bottomSheet.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
             }

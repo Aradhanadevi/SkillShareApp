@@ -11,7 +11,7 @@ import java.io.IOException;
 public class ChatBotApiHelper {
 
     private static final String OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-    private static final String API_KEY = "Bearer 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";
+    private static final String API_KEY = "Bearer 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";
 
     private final OkHttpClient client;
 
@@ -19,10 +19,15 @@ public class ChatBotApiHelper {
         client = new OkHttpClient();
     }
 
-    public void sendMessage(String message, ChatBotCallback callback) {
+    public void sendMessage(String message, String userName, String userSkills, ChatBotCallback callback) {
+        // Build system prompt with context
+        String introPrompt = "You are an AI assistant inside a Skillshare-style app. " +
+                "The user's name is \"" + userName + "\" and they are interested in: " + userSkills + ". " +
+                "Help them by suggesting courses, giving summaries, and taking notes.";
+
         JsonObject systemMsg = new JsonObject();
         systemMsg.addProperty("role", "system");
-        systemMsg.addProperty("content", "You are an AI assistant inside a Skillshare-style app. Help users with courses, summaries, and notes.");
+        systemMsg.addProperty("content", introPrompt);
 
         JsonObject userMsg = new JsonObject();
         userMsg.addProperty("role", "user");
@@ -57,7 +62,8 @@ public class ChatBotApiHelper {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    callback.onFailure(new IOException("Unexpected code " + response));
+                    String errorBody = response.body() != null ? response.body().string() : "null";
+                    callback.onFailure(new IOException("HTTP " + response.code() + ": " + errorBody));
                     return;
                 }
 
@@ -75,6 +81,7 @@ public class ChatBotApiHelper {
             }
         });
     }
+
 
     public interface ChatBotCallback {
         void onSuccess(String reply);
