@@ -63,6 +63,11 @@
             android:title="Feedback"
             android:visible="false"/>
         <item
+            android:id="@+id/nav_developerdetails"
+            android:icon="@drawable/nav_logout"
+            android:title="Meet Developers"
+            />
+        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/nav_logout"
             android:title="Logout"
