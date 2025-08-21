@@ -1,0 +1,709 @@
+@startuml
+class anjali.learning.skilshare.game.StartScreenActivity {
+# void onCreate(Bundle)
+}
+
+class anjali.learning.skilshare.FeedbackFragment {
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+}
+
+class anjali.learning.skilshare.LearnRequestedSkill {
+~ RecyclerView recyclerView
+~ TutorAdapter adapter
+~ ArrayList<UserModel> tutorList
+~ DatabaseReference usersRef
+# void onCreate(Bundle)
+- List<String> splitCsv(String)
+}
+
+
+class anjali.learning.skilshare.SearchFragment {
+- RecyclerView recyclerView
+- CourseAdapter adapter
+- TextView emptyView
+- List<Course> courseList
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+}
+
+
+class anjali.learning.skilshare.Adapter.FeaturedCourseAdapter {
+- List<Course> courseList
+- Context context
+- OnItemClickListener listener
++ FeaturedViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(FeaturedViewHolder,int)
++ int getItemCount()
+}
+
+
+interface anjali.learning.skilshare.Adapter.FeaturedCourseAdapter$OnItemClickListener {
+~ void onItemClick(Course)
+}
+
+class anjali.learning.skilshare.Adapter.FeaturedCourseAdapter$FeaturedViewHolder {
+~ ImageView imgThumbnail
+~ TextView txtTitle
+}
+
+class anjali.learning.skilshare.Adapter.FavouritesAdapter {
+~ Context context
+~ List<Course> courseList
+~ String username
++ ViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(ViewHolder,int)
++ int getItemCount()
+}
+
+
+class anjali.learning.skilshare.Adapter.FavouritesAdapter$ViewHolder {
+~ TextView name
+~ ImageView image
+~ Button btnGoToCourse
+}
+
+class anjali.learning.skilshare.Adapter.LeaderboardAdapter {
+- List<UserModel> users
++ ViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(ViewHolder,int)
++ int getItemCount()
++ void updateList(List<UserModel>)
+}
+
+
+class anjali.learning.skilshare.Adapter.LeaderboardAdapter$ViewHolder {
+~ TextView rankText
+}
+
+class anjali.learning.skilshare.FavouritesFragment {
+~ RecyclerView favRecyclerView
+~ List<Course> favList
+~ FavouritesAdapter adapter
+~ String username
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void loadFavourites(String)
+}
+
+
+class anjali.learning.skilshare.UploadSkillCourseFragment {
+~ EditText courseNameInput
+~ Button uploadCourseBtn
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void uploadCourse()
+- void clearFields()
+}
+
+
+class anjali.learning.skilshare.ChatBotApiHelper {
+- {static} String OPENROUTER_URL
+- {static} String API_KEY
+- OkHttpClient client
++ void sendMessage(String,String,String,ChatBotCallback)
+}
+
+
+interface anjali.learning.skilshare.ChatBotApiHelper$ChatBotCallback {
+~ void onSuccess(String)
+~ void onFailure(Exception)
+}
+
+class anjali.learning.skilshare.CourseDetailFragment {
+~ TextView nameText
+~ ImageView imageView
+~ Button registerBtn
+~ String name
+~ int videos
+~ boolean isFavorite
+~ String username
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void updateHeartIcon()
+- void registerCourse(String)
+}
+
+
+class anjali.learning.skilshare.RegisteredCourseFragment {
+- RecyclerView recyclerView
+- RegisteredCourseAdapter adapter
+- List<Course> registeredCourses
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void loadRegisteredCourses()
+- void fetchCourseDetails(Set<String>,String)
+- void openCourseDetail(Course)
+- void cancelRegistration(Course)
+}
+
+
+class anjali.learning.skilshare.Adapter.VideoAdapter {
+- Context context
+- List<VideoItem> videoList
+- String courseName
+- int currentPlayingIndex
+- OnVideoClickListener listener
+- Set<String> watchedVideos
+- String username
+~ String API_KEY
+- void fetchWatchedVideos()
++ VideoViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(VideoViewHolder,int)
+- void markAsWatched(VideoItem)
+- String formatDuration(long)
++ int getItemCount()
+- long parseIsoDuration(String)
++ void fetchDurationsForVideos()
+}
+
+
+interface anjali.learning.skilshare.Adapter.VideoAdapter$OnVideoClickListener {
+~ void onVideoClick(VideoItem)
+}
+
+class anjali.learning.skilshare.Adapter.VideoAdapter$VideoViewHolder {
+~ TextView title
+~ ImageView arrowIcon
+}
+
+class anjali.learning.skilshare.Adapter.CourseAdapter {
+- List<Course> courseList
++ CourseViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(CourseViewHolder,int)
++ int getItemCount()
+}
+
+
+class anjali.learning.skilshare.Adapter.CourseAdapter$CourseViewHolder {
+~ TextView courseName
+~ ImageView courseImage
+~ Button registerBtn
+~ TextView topPickBadge
+~ ChipGroup skillTags
+}
+
+class anjali.learning.skilshare.Profile {
+~ TextView profileTitle
+~ DatabaseReference databaseReference
+~ String username
+~ Button learnrequestedskill
+# void onCreate(Bundle)
+}
+
+
+class anjali.learning.skilshare.HomeFragment {
+- RecyclerView recyclerCourses
+- ArrayList<Course> courseList
+- CourseAdapter adapter
+- ProgressBar xpProgress
+- TextView xpStatus
+- int currentXP
+- ViewPager2 viewPagerFeatured
+- ArrayList<Course> featuredList
+- FeaturedCourseAdapter featuredAdapter
+- TextView featuredTitle
+- Handler carouselHandler
+- int carouselIndex
+- AutoCompleteTextView etSearchBar
+- ImageView ivSearchIcon
+- FloatingActionButton fabBot
+- View cardDailyQuiz
+- ActivityResultLauncher<Intent> quizLauncher
+- String currentUsername
+- String[] languages
+- String[] categoryList
+- String selectedLanguage
+- String selectedCategory
+- TextView levelText
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void setupFilterButtons(LinearLayout,String[],boolean)
+- void filterCourses()
+- void setupQuizLauncher()
+- void setupListeners()
+- void fetchAndShowStreak()
+- void fetchAndShowXP()
+- void updateXPUI()
+- void openChatBot()
+- void setupSearchBot()
+- void searchCourses(String)
+- void loadUserSkillsAndFilterCourses()
+- void fetchCoursesMatchingSkills(String)
+- void loadFeaturedCourses()
+- void startCarousel()
++ void onDestroyView()
+- void updateFeaturedDetails(Course)
+}
+
+
+class anjali.learning.skilshare.model.VideoItem {
+- String videoId
+- String title
+- String videoUrl
+- long duration
++ String getVideoId()
++ String getTitle()
++ String getVideoUrl()
++ long getDuration()
++ void setDuration(long)
+}
+
+
+class anjali.learning.skilshare.game.DinoGameActivity {
+- View dino
+- View obstacle
+- Handler handler
+- int score
+- TextView scoreText
+- boolean isJumping
+- boolean isGamePaused
+- float obstacleX
+- float obstacleSpeed
+- float maxSpeed
+- Runnable gameRunnable
+# void onCreate(Bundle)
+- void startGame()
+- boolean isColliding(View,View)
+- void jump()
+- void pauseGameAndShowQuiz()
+- void gameOver()
+}
+
+
+class anjali.learning.skilshare.DeveloperFragment {
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void openEmail(String)
+}
+
+class anjali.learning.skilshare.Adapter.MessageAdapter {
+- Context ctx
+- List<MessageModel> list
+- String currentUser
++ MsgVH onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(MsgVH,int)
++ int getItemCount()
+- void openReplyDialog(MessageModel)
+}
+
+
+class anjali.learning.skilshare.Adapter.MessageAdapter$MsgVH {
+~ TextView tvFrom
+~ Button btnAccept
+}
+
+class anjali.learning.skilshare.ExploreSkilCoursesFragment {
+- RecyclerView recyclerView
+- CourseAdapter adapter
+- List<Course> courseList
+- List<Course> allCourses
+- DatabaseReference databaseReference
+- AutoCompleteTextView etSearchBar
+- ImageView ivSearchIcon
+- List<String> courseNames
+- ArrayAdapter<String> autoAdapter
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void filterCourses(String)
+}
+
+
+class anjali.learning.skilshare.SkilProfessionalsFragment {
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+}
+
+class anjali.learning.skilshare.Adapter.TutorAdapter {
+- Context context
+- ArrayList<UserModel> tutorList
+- String currentUsername
++ TutorViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(TutorViewHolder,int)
++ int getItemCount()
+- void openSwapDialog(UserModel)
+- void pushMessageToFirebase(String,String,String,String,String,String)
+- ArrayAdapter<String> makeAdapter(String)
+- List<String> splitCsv(String)
+- String getSelected(Spinner)
+}
+
+
+abstract class anjali.learning.skilshare.Adapter.TutorAdapter$SimpleValue {
++ void onCancelled(DatabaseError)
+}
+
+class anjali.learning.skilshare.Adapter.TutorAdapter$TutorViewHolder {
+~ TextView nameTV
+~ Button sendBtn
+}
+
+class anjali.learning.skilshare.RequestSkilCourseFragment {
+- EditText etUsername
+- Button btnSubmitRequest
+- DatabaseReference databaseReference
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void submitRequest()
+- void clearForm()
+}
+
+
+class anjali.learning.skilshare.MessageRequestActivity {
+- RecyclerView rv
+- MessageAdapter adapter
+- ArrayList<MessageModel> list
+- String currentUser
+# void onCreate(Bundle)
+- void loadMessages()
+}
+
+
+class anjali.learning.skilshare.ChatBotModels {
+}
+class anjali.learning.skilshare.ChatBotModels$ChatRequest {
+~ String message
+}
+
+class anjali.learning.skilshare.ChatBotModels$ChatResponse {
+~ String reply
++ String getReply()
+}
+
+
+class anjali.learning.skilshare.ExploreMoreFragment {
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+}
+
+class anjali.learning.skilshare.MainActivity {
+- DrawerLayout drawerLayout
+- String username
+- NavigationView navigationView
+- BottomNavigationView bottomNav
+# void onCreate(Bundle)
++ boolean onNavigationItemSelected(MenuItem)
++ void onBackPressed()
+}
+
+
+class anjali.learning.skilshare.Splashscreen {
+- {static} int SPLASH_DURATION
+# void onCreate(Bundle)
+- void startOrbitAnimation(FrameLayout,int,boolean)
+}
+
+
+class anjali.learning.skilshare.model.Course {
+- String description
+- int noofvideos
+- String playlistlink
+- int progress
+- String skils
++ int getProgress()
++ void setProgress(int)
++ String getDescription()
++ String getTutor()
++ String getLanguage()
++ String getLocation()
++ String getImageUrl()
++ int getNoofvideos()
++ String getCategory()
++ String getSkills()
++ int getPrice()
++ String getCourseName()
++ String getPlaylistlink()
++ String getSkils()
++ void setDescription(String)
++ void setTutor(String)
++ void setLanguage(String)
++ void setLocation(String)
++ void setImageUrl(String)
++ void setNoofvideos(int)
++ void setCategory(String)
++ void setSkills(String)
++ void setPrice(int)
++ void setCourseName(String)
++ void setPlaylistlink(String)
++ void setSkils(String)
+}
+
+
+class anjali.learning.skilshare.XPUtils {
++ {static} int getLevelFromXP(long)
++ {static} int getXPForNextLevel(int)
++ {static} int getXPProgressInLevel(long)
++ {static} int getXPRangeForLevel(int)
+}
+
+class anjali.learning.skilshare.SignInActivity {
+~ Button Signin
+~ TextView redirectToSignup
+~ EditText username
+~ FirebaseAuth mAuth
+~ DatabaseReference databaseReference
+# void onCreate(Bundle)
+- void loginUser(String,String)
+- void checkAndSetXPandStars(String)
+}
+
+
+class anjali.learning.skilshare.SettingsFragment {
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+}
+
+class anjali.learning.skilshare.model.ChatMessage {
+- String text
+- boolean isUser
++ String getText()
++ boolean isUser()
+}
+
+
+class anjali.learning.skilshare.LeaderboardActivity {
+- ListView leaderboardListView
+- ArrayAdapter<String> leaderboardAdapter
+- ArrayList<String> leaderboardData
+- DatabaseReference usersRef
+# void onCreate(Bundle)
+- void loadLeaderboard()
+}
+
+
+class anjali.learning.skilshare.BrainGameActivity {
+~ TextView xpTextView
+~ Button completeButton
+# void onCreate(Bundle)
+- void loadUserStats(String)
+- void updateUserXPAndStreak(String,int)
+}
+
+
+class anjali.learning.skilshare.ChatBottomSheet {
+- RecyclerView recyclerView
+- EditText inputMessage
+- ImageView btnSend
+- ArrayList<ChatMessage> messages
+- ChatAdapter adapter
+- OkHttpClient client
+- String name
+- String skills
++ {static} ChatBottomSheet newInstance(String,String)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void addMessage(String,boolean)
+- void sendToBot(String,String,String)
++ void onStart()
+}
+
+
+class anjali.learning.skilshare.DailyQuizActivity {
+- TextView questionText
+- RadioGroup optionsGroup
+- RadioButton optionA
+- Button submitButton
+- List<Map<String,Object>> questionsList
+- int currentQuestionIndex
+- int score
+- String selectedCourse
+# void onCreate(Bundle)
+- void loadRegisteredCourseAndStartQuiz()
+- void fetchQuizQuestions()
+- void showQuestion()
+- void checkAnswerAndProceed()
+- void endQuiz()
+- void addXPAfterQuiz(int)
+}
+
+
+class anjali.learning.skilshare.LeaderboardHelper {
++ {static} void loadLeaderboard(ArrayAdapter<String>,ArrayList<String>)
+}
+
+class anjali.learning.skilshare.ChatActivity {
+- RecyclerView recyclerChat
+- EditText editMessage
+- ImageView buttonSend
+- ChatAdapter chatAdapter
+- List<ChatMessage> messages
+# void onCreate(Bundle)
+- void sendMessage(String)
+}
+
+
+class anjali.learning.skilshare.PlaylistFragment {
+- {static} String API_KEY
+- TextView courseTitleText
+- WebView videoWebView
+- ProgressBar courseProgressBar
+- RecyclerView videoListRecyclerView
+- String courseName
+- String playlistId
+- String lastPlayedVideoId
+- List<VideoItem> videoList
+- TextView progressText
+- VideoAdapter adapter
+- String username
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void loadVideo(String)
+- void fetchPlaylistVideos(String)
+- void fetchVideosRecursive(OkHttpClient,String,String)
+- void updateProgressBar()
+- void markVideoAsWatched(String,String)
+- void playNextVideo()
+- String extractPlaylistId(String)
+}
+
+
+class anjali.learning.skilshare.PlaylistFragment$VideoCompleteListener {
++ void onVideoEnded()
+}
+
+class anjali.learning.skilshare.model.UserModel {
++ String name
++ int xp
++ int level
++ int streak
++ String getName()
++ String getEmail()
++ String getUsername()
++ int getXp()
++ int getLevel()
++ int getStreak()
+}
+
+
+class anjali.learning.skilshare.Adapter.RegisteredCourseAdapter {
+- List<Course> courseList
+- CourseClickListener listener
++ ViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(ViewHolder,int)
++ int getItemCount()
+}
+
+
+interface anjali.learning.skilshare.Adapter.RegisteredCourseAdapter$CourseClickListener {
+~ void onCourseClick(Course)
+~ void onCancelClick(Course)
+}
+
+class anjali.learning.skilshare.Adapter.RegisteredCourseAdapter$ViewHolder {
+~ ImageView courseImage
+~ TextView courseName
+~ Button goToCourseBtn
+~ ProgressBar progressBar
+}
+
+class anjali.learning.skilshare.Adapter.ChatAdapter {
+- {static} int TYPE_USER
+- {static} int TYPE_BOT
+- List<ChatMessage> messages
+- Context context
++ int getItemViewType(int)
++ RecyclerView.ViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(RecyclerView.ViewHolder,int)
++ int getItemCount()
++ void addMessage(ChatMessage)
+}
+
+
+class anjali.learning.skilshare.Adapter.ChatAdapter$UserViewHolder {
+~ TextView textView
+}
+
+class anjali.learning.skilshare.Adapter.ChatAdapter$BotViewHolder {
+~ TextView textView
+}
+
+class anjali.learning.skilshare.SignUpActivity {
+~ Button Signup
+~ TextView redirectToSignin
+~ EditText username
+~ CheckBox accepttandc
+~ FirebaseAuth mAuth
+~ DatabaseReference database
+# void onCreate(Bundle)
+}
+
+
+class anjali.learning.skilshare.GamificationHelper {
+- {static} int XP_PER_LEVEL
+- {static} FirebaseDatabase database
++ {static} int calculateLevel(int)
++ {static} int xpForNextLevel(int)
++ {static} void addXP(String,int)
++ {static} void updateStreak(String)
++ {static} void rewardQuizCompletion(int)
+}
+
+
+class anjali.learning.skilshare.model.MessageModel {
++ String id
++ String from
++ String fromEmail
++ String message
++ String tutorOfferedSkill
++ String tutorWantedSkill
++ String myOfferedSkill
++ String myRequestedSkill
++ long timestamp
+}
+
+
+
+androidx.appcompat.app.AppCompatActivity <|-- anjali.learning.skilshare.game.StartScreenActivity
+androidx.fragment.app.Fragment <|-- anjali.learning.skilshare.FeedbackFragment
+androidx.appcompat.app.AppCompatActivity <|-- anjali.learning.skilshare.LearnRequestedSkill
+androidx.fragment.app.Fragment <|-- anjali.learning.skilshare.SearchFragment
+anjali.learning.skilshare.Adapter.Adapter <|-- anjali.learning.skilshare.Adapter.FeaturedCourseAdapter
+anjali.learning.skilshare.Adapter.FeaturedCourseAdapter +.. anjali.learning.skilshare.Adapter.FeaturedCourseAdapter$OnItemClickListener
+anjali.learning.skilshare.Adapter.FeaturedCourseAdapter +.. anjali.learning.skilshare.Adapter.FeaturedCourseAdapter$FeaturedViewHolder
+anjali.learning.skilshare.Adapter.ViewHolder <|-- anjali.learning.skilshare.Adapter.FeaturedCourseAdapter$FeaturedViewHolder
+anjali.learning.skilshare.Adapter.Adapter <|-- anjali.learning.skilshare.Adapter.FavouritesAdapter
+anjali.learning.skilshare.Adapter.FavouritesAdapter +.. anjali.learning.skilshare.Adapter.FavouritesAdapter$ViewHolder
+anjali.learning.skilshare.Adapter.ViewHolder <|-- anjali.learning.skilshare.Adapter.FavouritesAdapter$ViewHolder
+anjali.learning.skilshare.Adapter.Adapter <|-- anjali.learning.skilshare.Adapter.LeaderboardAdapter
+anjali.learning.skilshare.Adapter.LeaderboardAdapter +.. anjali.learning.skilshare.Adapter.LeaderboardAdapter$ViewHolder
+anjali.learning.skilshare.Adapter.ViewHolder <|-- anjali.learning.skilshare.Adapter.LeaderboardAdapter$ViewHolder
+androidx.fragment.app.Fragment <|-- anjali.learning.skilshare.FavouritesFragment
+androidx.fragment.app.Fragment <|-- anjali.learning.skilshare.UploadSkillCourseFragment
+anjali.learning.skilshare.ChatBotApiHelper +.. anjali.learning.skilshare.ChatBotApiHelper$ChatBotCallback
+androidx.fragment.app.Fragment <|-- anjali.learning.skilshare.CourseDetailFragment
+androidx.fragment.app.Fragment <|-- anjali.learning.skilshare.RegisteredCourseFragment
+anjali.learning.skilshare.Adapter.Adapter <|-- anjali.learning.skilshare.Adapter.VideoAdapter
+anjali.learning.skilshare.Adapter.VideoAdapter +.. anjali.learning.skilshare.Adapter.VideoAdapter$OnVideoClickListener
+anjali.learning.skilshare.Adapter.VideoAdapter +.. anjali.learning.skilshare.Adapter.VideoAdapter$VideoViewHolder
+anjali.learning.skilshare.Adapter.ViewHolder <|-- anjali.learning.skilshare.Adapter.VideoAdapter$VideoViewHolder
+anjali.learning.skilshare.Adapter.Adapter <|-- anjali.learning.skilshare.Adapter.CourseAdapter
+anjali.learning.skilshare.Adapter.CourseAdapter +.. anjali.learning.skilshare.Adapter.CourseAdapter$CourseViewHolder
+anjali.learning.skilshare.Adapter.ViewHolder <|-- anjali.learning.skilshare.Adapter.CourseAdapter$CourseViewHolder
+androidx.appcompat.app.AppCompatActivity <|-- anjali.learning.skilshare.Profile
+androidx.fragment.app.Fragment <|-- anjali.learning.skilshare.HomeFragment
+androidx.appcompat.app.AppCompatActivity <|-- anjali.learning.skilshare.game.DinoGameActivity
+androidx.fragment.app.Fragment <|-- anjali.learning.skilshare.DeveloperFragment
+anjali.learning.skilshare.Adapter.Adapter <|-- anjali.learning.skilshare.Adapter.MessageAdapter
+anjali.learning.skilshare.Adapter.MessageAdapter +.. anjali.learning.skilshare.Adapter.MessageAdapter$MsgVH
+anjali.learning.skilshare.Adapter.ViewHolder <|-- anjali.learning.skilshare.Adapter.MessageAdapter$MsgVH
+androidx.fragment.app.Fragment <|-- anjali.learning.skilshare.ExploreSkilCoursesFragment
+androidx.fragment.app.Fragment <|-- anjali.learning.skilshare.SkilProfessionalsFragment
+anjali.learning.skilshare.Adapter.Adapter <|-- anjali.learning.skilshare.Adapter.TutorAdapter
+anjali.learning.skilshare.Adapter.TutorAdapter +.. anjali.learning.skilshare.Adapter.TutorAdapter$SimpleValue
+anjali.learning.skilshare.Adapter.ValueEventListener <|.. anjali.learning.skilshare.Adapter.TutorAdapter$SimpleValue
+anjali.learning.skilshare.Adapter.TutorAdapter +.. anjali.learning.skilshare.Adapter.TutorAdapter$TutorViewHolder
+anjali.learning.skilshare.Adapter.ViewHolder <|-- anjali.learning.skilshare.Adapter.TutorAdapter$TutorViewHolder
+androidx.fragment.app.Fragment <|-- anjali.learning.skilshare.RequestSkilCourseFragment
+androidx.appcompat.app.AppCompatActivity <|-- anjali.learning.skilshare.MessageRequestActivity
+anjali.learning.skilshare.ChatBotModels +.. anjali.learning.skilshare.ChatBotModels$ChatRequest
+anjali.learning.skilshare.ChatBotModels +.. anjali.learning.skilshare.ChatBotModels$ChatResponse
+androidx.fragment.app.Fragment <|-- anjali.learning.skilshare.ExploreMoreFragment
+anjali.learning.skilshare.OnNavigationItemSelectedListener <|.. anjali.learning.skilshare.MainActivity
+androidx.appcompat.app.AppCompatActivity <|-- anjali.learning.skilshare.MainActivity
+androidx.appcompat.app.AppCompatActivity <|-- anjali.learning.skilshare.Splashscreen
+java.io.Serializable <|.. anjali.learning.skilshare.model.Course
+androidx.appcompat.app.AppCompatActivity <|-- anjali.learning.skilshare.SignInActivity
+androidx.fragment.app.Fragment <|-- anjali.learning.skilshare.SettingsFragment
+androidx.appcompat.app.AppCompatActivity <|-- anjali.learning.skilshare.LeaderboardActivity
+androidx.appcompat.app.AppCompatActivity <|-- anjali.learning.skilshare.BrainGameActivity
+com.google.android.material.bottomsheet.BottomSheetDialogFragment <|-- anjali.learning.skilshare.ChatBottomSheet
+androidx.appcompat.app.AppCompatActivity <|-- anjali.learning.skilshare.DailyQuizActivity
+androidx.appcompat.app.AppCompatActivity <|-- anjali.learning.skilshare.ChatActivity
+androidx.fragment.app.Fragment <|-- anjali.learning.skilshare.PlaylistFragment
+anjali.learning.skilshare.PlaylistFragment +.. anjali.learning.skilshare.PlaylistFragment$VideoCompleteListener
+anjali.learning.skilshare.Adapter.Adapter <|-- anjali.learning.skilshare.Adapter.RegisteredCourseAdapter
+anjali.learning.skilshare.Adapter.RegisteredCourseAdapter +.. anjali.learning.skilshare.Adapter.RegisteredCourseAdapter$CourseClickListener
+anjali.learning.skilshare.Adapter.RegisteredCourseAdapter +.. anjali.learning.skilshare.Adapter.RegisteredCourseAdapter$ViewHolder
+anjali.learning.skilshare.Adapter.ViewHolder <|-- anjali.learning.skilshare.Adapter.RegisteredCourseAdapter$ViewHolder
+anjali.learning.skilshare.Adapter.Adapter <|-- anjali.learning.skilshare.Adapter.ChatAdapter
+anjali.learning.skilshare.Adapter.ChatAdapter +.. anjali.learning.skilshare.Adapter.ChatAdapter$UserViewHolder
+anjali.learning.skilshare.Adapter.ViewHolder <|-- anjali.learning.skilshare.Adapter.ChatAdapter$UserViewHolder
+anjali.learning.skilshare.Adapter.ChatAdapter +.. anjali.learning.skilshare.Adapter.ChatAdapter$BotViewHolder
+anjali.learning.skilshare.Adapter.ViewHolder <|-- anjali.learning.skilshare.Adapter.ChatAdapter$BotViewHolder
+androidx.appcompat.app.AppCompatActivity <|-- anjali.learning.skilshare.SignUpActivity
+@enduml
