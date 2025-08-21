@@ -9,7 +9,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+//This is trying
 public class Splashscreen extends AppCompatActivity {
 
     private static final int SPLASH_DURATION = 4000; // 4 seconds
