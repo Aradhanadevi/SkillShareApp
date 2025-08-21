@@ -43,6 +43,7 @@ public class SignInActivity extends AppCompatActivity {
             } else if (Password.isEmpty()) {
                 password.setError("Please enter password");
             } else {
+                Signin.setEnabled(false);
                 loginUser(Username, Password);
             }
         });
@@ -87,19 +88,23 @@ public class SignInActivity extends AppCompatActivity {
 
                                     } else {
                                         Toast.makeText(SignInActivity.this, "Auth failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                        Signin.setEnabled(true);
                                     }
                                 });
                     } else {
                         password.setError("Incorrect password");
+                        Signin.setEnabled(true);
                     }
                 } else {
                     username.setError("User not found");
+                    Signin.setEnabled(true);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(SignInActivity.this, "Database Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Signin.setEnabled(true);
             }
         });
     }
@@ -124,6 +129,7 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError error) {
                 // Optional: Handle errors
+                Signin.setEnabled(true);
             }
         });
     }

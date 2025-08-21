@@ -167,7 +167,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             selectedFragment = new SettingsFragment();
         } else if (id == R.id.nav_feedback) {
             selectedFragment = new FeedbackFragment();
-        }else if (id == R.id.nav_leaderboard) {
+        } else if (id == R.id.nav_developerdetails) {
+            selectedFragment = new DeveloperFragment();
+        }
+        else if (id == R.id.nav_leaderboard) {
             Intent intent = new Intent(MainActivity.this, LeaderboardActivity.class);
             startActivity(intent);
         }
