@@ -28,7 +28,6 @@ import java.util.*;
 
 import anjali.learning.skilshare.Adapter.CourseAdapter;
 import anjali.learning.skilshare.Adapter.FeaturedCourseAdapter;
-import anjali.learning.skilshare.Adapter.LeaderboardAdapter;
 import anjali.learning.skilshare.model.Course;
 import anjali.learning.skilshare.model.UserModel;
 
@@ -38,7 +37,7 @@ public class HomeFragment extends Fragment {
     private CourseAdapter adapter;
     private ProgressBar xpProgress;
     private TextView xpStatus, streakTextView;
-    private int currentXP = 0, xpGoal = 100;
+    private int currentXP = 0, xpGoal = 200;
     private ViewPager2 viewPagerFeatured;
     private ArrayList<Course> featuredList = new ArrayList<>();
     private FeaturedCourseAdapter featuredAdapter;
@@ -56,9 +55,7 @@ public class HomeFragment extends Fragment {
     private final String[] categoryList = {"All","Web Development", "Android", "Data Science","flutter","dsa","dance","design","python","App Development","communication","cooking","coding","soft skills"};
     private String selectedLanguage = "all";
     private String selectedCategory = "all";
-    private RecyclerView recyclerLeaderboard;
-    private LeaderboardAdapter leaderboardAdapter;
-    private List<UserModel> leaderboardUsers = new ArrayList<>();
+
     private TextView levelText;
 
     @Nullable
@@ -84,10 +81,6 @@ public class HomeFragment extends Fragment {
         fabMessage = view.findViewById(R.id.fabMessages);
         cardDailyQuiz = view.findViewById(R.id.cardDailyQuiz);
         recyclerCourses = view.findViewById(R.id.recyclerCourses);
-        recyclerLeaderboard = view.findViewById(R.id.recyclerLeaderboard);
-        recyclerLeaderboard.setLayoutManager(new LinearLayoutManager(getContext()));
-        leaderboardAdapter = new LeaderboardAdapter(leaderboardUsers);
-        recyclerLeaderboard.setAdapter(leaderboardAdapter);
         currentUsername = requireContext().getSharedPreferences("SkillzEraPrefs", MODE_PRIVATE)
                 .getString("username", null);
         recyclerCourses.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -104,34 +97,10 @@ public class HomeFragment extends Fragment {
         loadFeaturedCourses();
         loadUserSkillsAndFilterCourses();
         fetchAndShowStreak();
-        fetchAndShowXP();loadLeaderboard();
+        fetchAndShowXP();
         return view;
     }
-    private void loadLeaderboard() {
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
-        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<UserModel> users = new ArrayList<>();
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    UserModel user = snap.getValue(UserModel.class);
-                    if (user != null) {
-                        users.add(user);
-                    }
-                }
-// Using Integer.compare (recommended for readability)
-                Collections.sort(users, (u1, u2) -> Integer.compare(u2.getXp(), u1.getXp()));
 
-                leaderboardUsers.clear();
-                leaderboardUsers.addAll(users);
-                leaderboardAdapter.notifyDataSetChanged();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Failed to load leaderboard", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
     private void setupFilterButtons(LinearLayout container, String[] items, boolean isLanguage) {
         container.removeAllViews();
         for (String item : items) {

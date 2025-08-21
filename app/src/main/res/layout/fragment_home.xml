@@ -79,53 +79,6 @@
                     android:orientation="horizontal" />
             </HorizontalScrollView>
 
-            <!-- Featured Course Title -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Featured Course"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:layout_marginBottom="8dp" />
-
-            <!-- Featured Course ViewPager -->
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPagerFeatured"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="12dp"
-                android:clipToPadding="false"
-                android:paddingStart="32dp"
-                android:paddingEnd="32dp"
-                android:orientation="horizontal" />
-
-            <TextView
-                android:id="@+id/featuredCourseTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Mastering UI/UX Design"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:layout_marginBottom="4dp" />
-
-            <TextView
-                android:id="@+id/featuredCourseDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Learn the fundamentals of UI/UX design and create stunning interfaces."
-                android:textColor="#555555"
-                android:textSize="14sp"
-                android:layout_marginBottom="4dp" />
-
-            <TextView
-                android:id="@+id/featuredCourseDuration"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="45 min"
-                android:textColor="#888888"
-                android:textSize="12sp"
-                android:layout_marginBottom="16dp" />
-
             <!-- Challenges Section -->
             <TextView
                 android:layout_width="match_parent"
@@ -134,73 +87,6 @@
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:layout_marginBottom="8dp" />
-
-            <!-- XP Challenge Card -->
-            <LinearLayout
-                android:id="@+id/xpChallengeCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/rounded_bg"
-                android:padding="16dp"
-                android:layout_marginBottom="12dp"
-                android:elevation="4dp">
-
-                <TextView
-                    android:id="@+id/streakTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" "
-                    android:textSize="14sp"
-                    android:textColor="#FF5722"
-                    android:layout_marginBottom="8dp" />
-
-                <TextView
-                    android:id="@+id/xpTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Daily XP Challenge"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:layout_marginBottom="4dp" />
-
-                <TextView
-                    android:id="@+id/xpSubtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Complete 3 lessons to earn +50 XP!"
-                    android:textColor="#555555"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="8dp" />
-
-                <ProgressBar
-                    android:id="@+id/xpProgress"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="16dp"
-                    android:progress="0"
-                    android:max="3"
-                    android:progressDrawable="@drawable/progress_bar_xp"
-                    android:layout_marginBottom="8dp" />
-                <TextView
-                    android:id="@+id/levelText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Level 1"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp"
-                    android:textColor="#444444" />
-
-                <TextView
-                    android:id="@+id/xpStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1/3 lessons completed"
-                    android:textSize="12sp"
-                    android:textColor="#888888" />
-            </LinearLayout>
-
             <!-- Daily Quiz Card -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardDailyQuiz"
@@ -248,38 +134,119 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Leaderboard Title -->
+            <!-- XP Challenge Card -->
+            <LinearLayout
+                android:id="@+id/xpChallengeCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_bg"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp"
+                android:elevation="4dp">
+
+                <TextView
+                    android:id="@+id/streakTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="day 1 "
+                    android:textSize="14sp"
+                    android:textColor="#FF5722"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/xpTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Daily XP Challenge"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/xpSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Complete the daily quiz to get 10xp!"
+                    android:textColor="#555555"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp" />
+
+                <ProgressBar
+                    android:id="@+id/xpProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp"
+                    android:progress="0"
+                    android:max="3"
+                    android:progressDrawable="@drawable/progress_bar_xp"
+                    android:layout_marginBottom="8dp" />
+                <TextView
+                    android:id="@+id/levelText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Level 1"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="#444444" />
+
+                <TextView
+                    android:id="@+id/xpStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" "
+                    android:textSize="12sp"
+                    android:textColor="#888888" />
+            </LinearLayout>
+
+            <!-- Featured Course Title -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_trophy"
-                android:drawablePadding="8dp"
-                android:text="Leaderboard"
+                android:text="Featured Course"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:layout_marginBottom="8dp" />
 
-            <!-- Leaderboard Card -->
-            <androidx.cardview.widget.CardView
+            <!-- Featured Course ViewPager -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerFeatured"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="12dp"
+                android:clipToPadding="false"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
+                android:orientation="horizontal" />
+
+            <TextView
+                android:id="@+id/featuredCourseTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="6dp"
-                android:layout_marginBottom="16dp">
+                android:text="Mastering UI/UX Design"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+            <TextView
+                android:id="@+id/featuredCourseDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Learn the fundamentals of UI/UX design and create stunning interfaces."
+                android:textColor="#555555"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerLeaderboard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/featuredCourseDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="45 min"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:layout_marginBottom="16dp" />
+
 
             <!-- Recommended Courses Title -->
             <TextView
