@@ -37,7 +37,6 @@ public class SignInActivity extends AppCompatActivity {
         Signin.setOnClickListener(view -> {
             String Username = username.getText().toString().trim();
             String Password = password.getText().toString().trim();
-
             if (Username.isEmpty()) {
                 username.setError("Please enter username");
             } else if (Password.isEmpty()) {
@@ -47,13 +46,11 @@ public class SignInActivity extends AppCompatActivity {
                 loginUser(Username, Password);
             }
         });
-
         redirectToSignup.setOnClickListener(view -> {
             Intent redirect = new Intent(SignInActivity.this, SignUpActivity.class);
             startActivity(redirect);
         });
     }
-
     private void loginUser(String Username, String Password) {
         // Fetch user email from Realtime DB
         databaseReference.child(Username).addListenerForSingleValueEvent(new ValueEventListener() {

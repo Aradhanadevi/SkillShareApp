@@ -30,7 +30,7 @@ import anjali.learning.skilshare.Adapter.CourseAdapter;
 import anjali.learning.skilshare.Adapter.FeaturedCourseAdapter;
 import anjali.learning.skilshare.model.Course;
 import anjali.learning.skilshare.model.UserModel;
-
+//This is to test
 public class HomeFragment extends Fragment {
     private RecyclerView recyclerCourses;
     private ArrayList<Course> courseList = new ArrayList<>();
