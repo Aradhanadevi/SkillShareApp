@@ -73,9 +73,9 @@ public class SignInActivity extends AppCompatActivity {
                                         checkAndSetXPandStars(Username);
 
                                         // Save username
-                                        getSharedPreferences("SkillzEraPrefs", MODE_PRIVATE)
+                                        getSharedPreferences("SkillSharePrefs", MODE_PRIVATE)
                                                 .edit()
-                                                .putString("username", Username)
+                                                .putString("currentUsername", Username)
                                                 .apply();
 
 
