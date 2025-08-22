@@ -70,11 +70,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .replace(R.id.fragment_container, new FavouritesFragment())
                         .
                         commit();
-            } else if (itemId == R.id.bottom_profile) {
-                Intent intent = new Intent(MainActivity.this, Profile.class);
-                intent.putExtra("username", username);
-                startActivity(intent);
-            }else if(itemId==R.id.registered_courses){
+            }else if (itemId == R.id.bottom_profile) {
+                ProfileFragment profileFragment = new ProfileFragment();
+                Bundle args = new Bundle();
+                args.putString("username", username);
+                profileFragment.setArguments(args);
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, profileFragment)
+                        .commit();
+            }
+            else if(itemId==R.id.registered_courses){
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new RegisteredCourseFragment())
                                 .
@@ -129,10 +135,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         profileImage.setOnClickListener(v -> {
-            Intent i = new Intent(MainActivity.this, Profile.class);
-            i.putExtra("username", username);
-            startActivity(i);
+            ProfileFragment profileFragment = new ProfileFragment();
+
+            // Pass arguments if needed (e.g., username)
+            Bundle args = new Bundle();
+            args.putString("username", username);
+            profileFragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, profileFragment)
+                    .addToBackStack(null) // so user can go back
+                    .commit();
         });
+
 
         // Default fragment
         if (savedInstanceState == null) {
