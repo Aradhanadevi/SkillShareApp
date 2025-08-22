@@ -8,9 +8,9 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import anjali.learning.skilshare.R;
@@ -34,10 +34,25 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MsgVH> {
     @Override public void onBindViewHolder(@NonNull MsgVH h,int pos){
         MessageModel m = list.get(pos);
 
-        h.tvFrom.setText("From: " + m.from);
         h.tvFrom.setText("From: " + m.from + "\nEmail: " + (m.fromEmail != null ? m.fromEmail : "N/A"));
         h.tvMessage.setText(m.message);
         h.tvSkills.setText("You offer: "+m.myOfferedSkill+" | They offer: "+m.tutorOfferedSkill);
+
+        // ─── Show Approved Status ───────────────────────────
+        if (m.approved) {
+            h.tvApproved.setVisibility(View.VISIBLE);   // ✅ show green Approved text
+            h.btnAccept.setEnabled(false);             // ✅ disable button
+        } else {
+            h.tvApproved.setVisibility(View.GONE);     // ✅ hide text if not approved
+            h.btnAccept.setEnabled(true);
+        }
+
+        // ─── Approve ───────────────────────────
+        h.btnAccept.setOnClickListener(v -> {
+            approveMessage(m);
+            h.btnAccept.setEnabled(false);
+            h.tvApproved.setVisibility(View.VISIBLE); // ✅ update UI immediately
+        });
 
         // ─── Decline deletes the node ───────────────────────────
         h.btnDecline.setOnClickListener(v -> {
@@ -48,53 +63,112 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MsgVH> {
                     .removeValue();
         });
 
-        // ─── Accept / tap opens edit‑dialog ─────────────────────
-        View.OnClickListener open = v -> openReplyDialog(m);
-        h.btnAccept.setOnClickListener(open);
-        h.itemView.setOnClickListener(open);
+        // Optional: if you still want to reply separately
+        h.itemView.setOnClickListener(v -> openReplyDialog(m));
     }
 
     @Override public int getItemCount(){ return list.size(); }
 
-    // ────────────────────────────────────────────────────────────
+    // ───────────────────────────────────────────────
+    private void approveMessage(MessageModel msg) {
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("users");
+
+        // ✅ update in receiver’s messages (this is easy)
+        rootRef.child(currentUser)
+                .child("messages")
+                .child(msg.id)
+                .child("approved")
+                .setValue(true);
+
+        // ✅ find sender’s copy inside "messages/send"
+        DatabaseReference senderMessages = rootRef.child(msg.from).child("messages").child("send");
+
+        senderMessages.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    MessageModel senderMsg = child.getValue(MessageModel.class);
+
+                    if (senderMsg == null) continue;
+
+                    // Match by message text + timestamp (safer than only message)
+                    if (senderMsg.message.equals(msg.message)
+                            && senderMsg.timestamp == msg.timestamp
+                            && senderMsg.to.equals(currentUser)) {
+
+                        // ✅ update approved flag
+                        child.getRef().child("approved").setValue(true);
+                        break; // stop after first match
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+    }
+
+
+
+    // ───────────────────────────────────────────────
     private void openReplyDialog(MessageModel msg){
         EditText et = new EditText(ctx);
-        et.setText(msg.message);           // pre‑fill
+        et.setText(msg.message);
         et.setSelection(et.getText().length());
 
         new AlertDialog.Builder(ctx)
-                .setTitle("Reply to "+msg.from)
+                .setTitle("Reply to " + msg.from)
                 .setView(et)
-                .setPositiveButton("Send", (d,w)->{
+                .setPositiveButton("Send", (d,w) -> {
                     String newMsg = et.getText().toString().trim();
                     if(newMsg.isEmpty()) return;
 
-                    // write reply under sender's /messages
-                    DatabaseReference ref = FirebaseDatabase.getInstance()
-                            .getReference("users")
-                            .child(msg.from)
-                            .child("messages")
-                            .push();
+                    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("users");
 
-                    ref.setValue(new MessageModel(
-                            ref.getKey(),
+                    // Generate one common ID
+                    String msgId = rootRef.child(currentUser)
+                            .child("messages")
+                            .child("send")
+                            .push()
+                            .getKey();
+
+                    // Build object
+                    MessageModel newMessage = new MessageModel(
+                            msgId,
                             currentUser,
+                            FirebaseAuth.getInstance().getCurrentUser().getEmail(),
+                            msg.from,
+                            msg.fromEmail,
                             newMsg,
-                            msg.tutorOfferedSkill,   // swap roles
+                            msg.tutorOfferedSkill,
                             msg.tutorWantedSkill,
                             msg.myOfferedSkill,
                             msg.myRequestedSkill,
-                            System.currentTimeMillis()
-                    ));
-                    Toast.makeText(ctx,"Reply sent",Toast.LENGTH_SHORT).show();
+                            System.currentTimeMillis(),
+                            false
+                    );
+
+                    // ✅ Save to sender (messages/send)
+                    rootRef.child(currentUser)
+                            .child("messages")
+                            .child("send")
+                            .child(msgId)
+                            .setValue(newMessage);
+
+                    // ✅ Save to receiver (messages)
+                    rootRef.child(msg.from)
+                            .child("messages")
+                            .child(msgId)
+                            .setValue(newMessage);
                 })
-                .setNegativeButton("Cancel",null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
+
     // ───────── ViewHolder ───────────────────────────────────────
     static class MsgVH extends RecyclerView.ViewHolder{
-        TextView tvFrom,tvMessage,tvSkills;
+        TextView tvFrom,tvMessage,tvSkills,tvApproved;
         Button btnAccept, btnDecline;
         MsgVH(@NonNull View v){
             super(v);
@@ -103,6 +177,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MsgVH> {
             tvSkills  = v.findViewById(R.id.tvSkills);
             btnAccept = v.findViewById(R.id.btnAccept);
             btnDecline= v.findViewById(R.id.btnDecline);
+            tvApproved= v.findViewById(R.id.tvApproved); // ✅ Added
         }
     }
 }

@@ -1,6 +1,9 @@
 package anjali.learning.skilshare;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,7 +24,7 @@ public class MessageRequestActivity extends AppCompatActivity {
     private MessageAdapter adapter;
     private final ArrayList<MessageModel> list = new ArrayList<>();
     private String currentUser;
-
+    Button sentmessage;
     @Override protected void onCreate(Bundle b){
         super.onCreate(b);
         setContentView(R.layout.activity_message_request);
@@ -33,6 +36,16 @@ public class MessageRequestActivity extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MessageAdapter(this,list,currentUser);
         rv.setAdapter(adapter);
+        sentmessage=findViewById(R.id.btnSendMessage);
+        sentmessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MessageRequestActivity.this, SentMessagesActivity.class);
+                intent.putExtra("currentUsername", currentUser); // pass current user
+                startActivity(intent);
+            }
+        });
+
 
         loadMessages();
     }
