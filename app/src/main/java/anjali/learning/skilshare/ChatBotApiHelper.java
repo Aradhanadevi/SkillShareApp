@@ -11,7 +11,7 @@ import java.io.IOException;
 public class ChatBotApiHelper {
 
     private static final String OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-    private static final String API_KEY = "Bearer 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";
+    private static final String API_KEY = "";
 
     private final OkHttpClient client;
 
