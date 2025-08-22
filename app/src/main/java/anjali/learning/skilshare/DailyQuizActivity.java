@@ -60,8 +60,8 @@ public class DailyQuizActivity extends AppCompatActivity {
     }
 
     private void loadRegisteredCourseAndStartQuiz() {
-        SharedPreferences prefs = getSharedPreferences("SkillzEraPrefs", MODE_PRIVATE);
-        String username = prefs.getString("username", null);
+        SharedPreferences prefs = getSharedPreferences("SkillSharePrefs", MODE_PRIVATE);
+        String username = prefs.getString("currentUsername", null);
 
         if (username == null) {
             Toast.makeText(this, "User not logged in.", Toast.LENGTH_SHORT).show();
@@ -187,8 +187,8 @@ public class DailyQuizActivity extends AppCompatActivity {
         scoreText.setVisibility(View.VISIBLE);
         scoreText.setText("Score: " + score + "/" + questionsList.size());
 
-        SharedPreferences prefs = getSharedPreferences("SkillzEraPrefs", MODE_PRIVATE);
-        String username = prefs.getString("username", null);
+        SharedPreferences prefs = getSharedPreferences("SkillSharePrefs", MODE_PRIVATE);
+        String username = prefs.getString("currentUsername", null);
         if (username != null) {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(username);
             userRef.child("level").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -210,8 +210,8 @@ public class DailyQuizActivity extends AppCompatActivity {
     }
 
     private void addXPAfterQuiz(int xpToAdd) {
-        SharedPreferences prefs = getSharedPreferences("SkillzEraPrefs", MODE_PRIVATE);
-        String username = prefs.getString("username", null);
+        SharedPreferences prefs = getSharedPreferences("SkillSharePrefs", MODE_PRIVATE);
+        String username = prefs.getString("currentUsername", null);
         if (username == null) return;
 
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(username);

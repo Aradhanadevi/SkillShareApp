@@ -38,6 +38,7 @@
         android:text="Submit"
         android:backgroundTint="@color/electric_purple"
         android:layout_marginTop="24dp"
+        android:background="@drawable/button_bg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

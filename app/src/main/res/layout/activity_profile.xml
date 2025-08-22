@@ -262,6 +262,7 @@
             android:layout_height="56dp"
             android:layout_marginTop="16dp"
             android:backgroundTint="#6200EE"
+            android:background="@drawable/button_bg"
             android:letterSpacing="0.1"
             android:text="SWAP SKILLS"
             android:textAllCaps="true"
