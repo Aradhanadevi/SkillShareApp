@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -13,7 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SkilShare"
-        tools:targetApi="31">
+        tools:targetApi="31" >
+        <activity
+            android:name=".SentMessagesActivity"
+            android:exported="false" />
         <activity
             android:name=".Splashscreen"
             android:exported="true" >
@@ -26,7 +29,6 @@
         <activity
             android:name=".MessageRequestActivity"
             android:exported="false" />
-
         <activity
             android:name=".LearnRequestedSkill"
             android:exported="false" />
@@ -36,10 +38,8 @@
         <activity
             android:name=".nav_header"
             android:exported="false" />
-
         <activity android:name=".BrainGameActivity" />
-        <activity android:name="DailyQuizActivity"/>
-
+        <activity android:name=".DailyQuizActivity" />
         <activity
             android:name=".SignUpActivity"
             android:exported="false"
@@ -47,17 +47,18 @@
         <activity
             android:name=".SignInActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize">
-
+            android:windowSoftInputMode="adjustResize" >
         </activity>
-        <activity android:name=".game.StartScreenActivity"
-            android:exported="true">
+        <activity
+            android:name=".game.StartScreenActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".game.DinoGameActivity"/>
+        <activity android:name=".game.DinoGameActivity" />
         <activity android:name=".LeaderboardActivity" />
         <activity android:name=".ChatActivity" />
         <activity

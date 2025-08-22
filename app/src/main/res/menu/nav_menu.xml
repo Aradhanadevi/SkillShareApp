@@ -18,6 +18,7 @@
             android:icon="@drawable/nav_uploadskilcourse"
             android:title="Upload Skill Course"
 
+
             />
         <item
             android:id="@+id/nav_dinogame"
@@ -64,7 +65,7 @@
             android:visible="false"/>
         <item
             android:id="@+id/nav_developerdetails"
-            android:icon="@drawable/nav_logout"
+            android:icon="@drawable/ic_developer"
             android:title="Meet Developers"
             />
         <item
