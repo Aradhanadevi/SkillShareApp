@@ -30,7 +30,7 @@ import anjali.learning.skilshare.Adapter.CourseAdapter;
 import anjali.learning.skilshare.Adapter.FeaturedCourseAdapter;
 import anjali.learning.skilshare.model.Course;
 import anjali.learning.skilshare.model.UserModel;
-//This is to test
+//Man some people dont know how to use github like wtf.
 public class HomeFragment extends Fragment {
     private RecyclerView recyclerCourses;
     private ArrayList<Course> courseList = new ArrayList<>();

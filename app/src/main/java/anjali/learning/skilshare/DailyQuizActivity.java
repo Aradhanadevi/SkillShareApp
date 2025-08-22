@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
+//Bro i swear to god if this doesnot work then i will crash out
 public class DailyQuizActivity extends AppCompatActivity {
 
     private TextView questionText, questionCounter, scoreText;
