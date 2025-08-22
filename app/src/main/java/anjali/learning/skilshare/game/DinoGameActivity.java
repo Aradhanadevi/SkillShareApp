@@ -5,12 +5,13 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.graphics.Rect;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import anjali.learning.skilshare.R;
@@ -26,7 +27,7 @@ public class DinoGameActivity extends AppCompatActivity {
     private boolean isGamePaused = false;
 
     private float obstacleX;
-    private float obstacleSpeed = 20f; // start slower
+    private float obstacleSpeed = 15f; // start slower
     private final float maxSpeed = 30f;
 
     @Override
@@ -38,19 +39,23 @@ public class DinoGameActivity extends AppCompatActivity {
         obstacle = findViewById(R.id.obstacle);
         scoreText = findViewById(R.id.scoreText);
 
-        // Ensure dino translation starts at 0
+        // Ensure dino starts at ground level
         dino.setTranslationY(0f);
 
-        obstacleX = 1500f; // initial obstacle position
-
+        obstacleX = 2000f; // initial obstacle position
+        //This is just test commit
         startGame();
 
-        dino.setOnClickListener(v -> {
-            if (!isJumping && !isGamePaused) {
+        // ✅ Jump on single tap (using touch, not click)
+        dino.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN && !isJumping && !isGamePaused) {
                 jump();
+                return true; // consume touch
             }
+            return false;
         });
     }
+
     private void startGame() {
         isGamePaused = true; // Pause until player starts
 
@@ -64,6 +69,7 @@ public class DinoGameActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .show();
     }
+
     private Runnable gameRunnable = new Runnable() {
         @Override
         public void run() {
@@ -75,6 +81,7 @@ public class DinoGameActivity extends AppCompatActivity {
             // Move obstacle left
             obstacleX -= obstacleSpeed;
             obstacle.setX(obstacleX);
+
             // Reset obstacle when off screen
             if (obstacleX < -100) {
                 obstacleX = 1000;
@@ -85,27 +92,34 @@ public class DinoGameActivity extends AppCompatActivity {
                 if (obstacleSpeed < maxSpeed) {
                     obstacleSpeed += 0.3f;
                 }
+
                 // Quiz trigger every 5 points
                 if (score % 5 == 0) {
                     pauseGameAndShowQuiz();
                 }
             }
+
             // Collision check
             if (isColliding(dino, obstacle)) {
                 gameOver();
                 return;
             }
+
             handler.postDelayed(this, 25);
         }
     };
 
     private boolean isColliding(View a, View b) {
-        Rect rectA = new Rect(a.getLeft(),
-                (int)(a.getTop() + a.getTranslationY()),
+        Rect rectA = new Rect(
+                a.getLeft(),
+                (int) (a.getTop() + a.getTranslationY()),
                 a.getRight(),
-                (int)(a.getBottom() + a.getTranslationY()));
+                (int) (a.getBottom() + a.getTranslationY())
+        );
+
         Rect rectB = new Rect();
         b.getHitRect(rectB);
+
         return Rect.intersects(rectA, rectB);
     }
 
@@ -116,10 +130,20 @@ public class DinoGameActivity extends AppCompatActivity {
         float jumpHeight = 500f;  // pixels
         long duration = 750;      // up/down duration
 
-        ObjectAnimator up = ObjectAnimator.ofFloat(dino, "translationY", dino.getTranslationY(), dino.getTranslationY() - jumpHeight);
+        ObjectAnimator up = ObjectAnimator.ofFloat(
+                dino,
+                "translationY",
+                dino.getTranslationY(),
+                dino.getTranslationY() - jumpHeight
+        );
         up.setDuration(duration);
 
-        ObjectAnimator down = ObjectAnimator.ofFloat(dino, "translationY", dino.getTranslationY() - jumpHeight, 0f);
+        ObjectAnimator down = ObjectAnimator.ofFloat(
+                dino,
+                "translationY",
+                dino.getTranslationY() - jumpHeight,
+                0f
+        );
         down.setDuration(duration);
 
         AnimatorSet jumpSet = new AnimatorSet();
