@@ -96,5 +96,18 @@
             android:textColor="#6C4AB6"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="10dp" />
+        <!-- Forgot Password -->
+        <TextView
+            android:id="@+id/forgotPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Forgot Password?"
+            android:textAlignment="center"
+            android:textColor="#FF5722"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"/>
+
     </LinearLayout>
 </ScrollView>

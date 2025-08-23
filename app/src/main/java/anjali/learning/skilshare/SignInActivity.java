@@ -17,6 +17,7 @@ public class SignInActivity extends AppCompatActivity {
     Button Signin;
     TextView redirectToSignup;
     EditText username, password;
+    TextView forgotPassword;
 
     FirebaseAuth mAuth;
     DatabaseReference databaseReference;
@@ -30,6 +31,7 @@ public class SignInActivity extends AppCompatActivity {
         redirectToSignup = findViewById(R.id.signupredirecttxt);
         username = findViewById(R.id.lusername);
         password = findViewById(R.id.lpassword);
+        forgotPassword = findViewById(R.id.forgotPassword);
 
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
@@ -37,6 +39,7 @@ public class SignInActivity extends AppCompatActivity {
         Signin.setOnClickListener(view -> {
             String Username = username.getText().toString().trim();
             String Password = password.getText().toString().trim();
+
             if (Username.isEmpty()) {
                 username.setError("Please enter username");
             } else if (Password.isEmpty()) {
@@ -46,11 +49,18 @@ public class SignInActivity extends AppCompatActivity {
                 loginUser(Username, Password);
             }
         });
+
+        forgotPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(SignInActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
+        });
+
         redirectToSignup.setOnClickListener(view -> {
             Intent redirect = new Intent(SignInActivity.this, SignUpActivity.class);
             startActivity(redirect);
         });
     }
+
     private void loginUser(String Username, String Password) {
         // Fetch user email from Realtime DB
         databaseReference.child(Username).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -58,10 +68,9 @@ public class SignInActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     String email = snapshot.child("email").getValue(String.class);
-                    String storedPassword = snapshot.child("password").getValue(String.class);
 
-                    if (email != null && storedPassword != null && storedPassword.equals(Password)) {
-                        // FirebaseAuth login
+                    if (email != null) {
+                        // ✅ Only check with FirebaseAuth
                         mAuth.signInWithEmailAndPassword(email, Password)
                                 .addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {
@@ -69,12 +78,11 @@ public class SignInActivity extends AppCompatActivity {
                                         // ✅ XP & Stars Setup
                                         checkAndSetXPandStars(Username);
 
-                                        // Save username
+                                        // Save username in SharedPreferences
                                         getSharedPreferences("SkillSharePrefs", MODE_PRIVATE)
                                                 .edit()
                                                 .putString("currentUsername", Username)
                                                 .apply();
-
 
                                         Toast.makeText(SignInActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
 
@@ -89,7 +97,7 @@ public class SignInActivity extends AppCompatActivity {
                                     }
                                 });
                     } else {
-                        password.setError("Incorrect password");
+                        username.setError("Email not found for this username");
                         Signin.setEnabled(true);
                     }
                 } else {
@@ -106,7 +114,7 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
-    // 🔥 New method to check and set XP & Stars
+    // ✅ New method to check and set XP & Stars
     private void checkAndSetXPandStars(String Username) {
         DatabaseReference userRef = databaseReference.child(Username);
 
@@ -125,7 +133,6 @@ public class SignInActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Optional: Handle errors
                 Signin.setEnabled(true);
             }
         });
