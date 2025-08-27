@@ -21,12 +21,16 @@ import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class SignUpActivity extends AppCompatActivity {
-
-    private EditText nameEt, emailEt, passwordEt;
-    private CheckBox tutorRightsCb;
+    Button Signup;
+    TextView redirectToSignin;
+    EditText username, name, password, confirmpassword, skils, skilloffered, skillrequested, location, email;
+    private CheckBox alsowanttutorrights,accepttandc;
     private Button signupBtn, uploadBtn;
     private ImageView previewIv;
 
@@ -45,21 +49,41 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        nameEt = findViewById(R.id.name);
-        emailEt = findViewById(R.id.email);
-        passwordEt = findViewById(R.id.password);
-        tutorRightsCb = findViewById(R.id.wanttutorrights);
-        uploadBtn = findViewById(R.id.btnUploadTutorDoc);
+
+
+
         signupBtn = findViewById(R.id.btnsignup);
+        redirectToSignin = findViewById(R.id.loginredirecttxt);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
+        confirmpassword = findViewById(R.id.confirmpassword);
+        skils = findViewById(R.id.skils);
+        location = findViewById(R.id.location);
+        email = findViewById(R.id.email);
+        accepttandc = findViewById(R.id.accepttandc);
+        name = findViewById(R.id.name);
+        skilloffered = findViewById(R.id.skillsOffered);
+        skillrequested = findViewById(R.id.skillsRequested);
+        alsowanttutorrights = findViewById(R.id.wanttutorrights);
+        uploadBtn = findViewById(R.id.btnUploadTutorDoc);
         previewIv = findViewById(R.id.previewIv);
+
 
         usersRef = FirebaseDatabase.getInstance().getReference("users");
 
         // Hide upload stuff initially
+
+        redirectToSignin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent redirectToSignin=new Intent(SignUpActivity.this, SignInActivity.class);
+                startActivity(redirectToSignin);
+            }
+        });
         uploadBtn.setVisibility(View.GONE);
         previewIv.setVisibility(View.GONE);
 
-        tutorRightsCb.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        alsowanttutorrights.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 uploadBtn.setVisibility(View.VISIBLE);
                 previewIv.setVisibility(View.VISIBLE);
@@ -159,17 +183,40 @@ public class SignUpActivity extends AppCompatActivity {
         }).start();
     }
     private void registerUser() {
-        String username = nameEt.getText().toString().trim();
-        String email = emailEt.getText().toString();
-        String password = passwordEt.getText().toString();
+        String Name = name.getText().toString().trim();
+        String Username = username.getText().toString().trim();
+        String Email = email.getText().toString().trim();
+        String Password = password.getText().toString().trim();
+        String ConfirmPassword = confirmpassword.getText().toString().trim();
+        String Skils = skils.getText().toString().trim();
+        String SkillOffered = skilloffered.getText().toString().trim();
+        String SkillRequested = skillrequested.getText().toString().trim();
+        String Location = location.getText().toString().trim();
 
-        if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Fill all fields", Toast.LENGTH_SHORT).show();
+        // Firebase key-safe username (replace spaces/dots etc.)
+        String safeUsername = Username.replaceAll("[.#$\\[\\]]", "_");
+
+        // Basic validation
+        if (Name.isEmpty() || Username.isEmpty() || Password.isEmpty() || ConfirmPassword.isEmpty()
+                || Skils.isEmpty() || Location.isEmpty() || Email.isEmpty()
+                || SkillOffered.isEmpty() || SkillRequested.isEmpty()) {
+            Toast.makeText(this, "Please enter all details", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        if (tutorRightsCb.isChecked() && uploadedImageUrl == null) {
+        if (alsowanttutorrights.isChecked() && uploadedImageUrl == null) {
             Toast.makeText(this, "Please upload verification image", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!Email.matches("[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")) {
+            email.setError("Enter valid email");
+            return;
+        }
+        if (!ConfirmPassword.equals(Password)) {
+            confirmpassword.setError("Password not matching");
+            return;
+        }
+        if (!accepttandc.isChecked()) {
+            Toast.makeText(this, "Please accept T&C", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -178,58 +225,65 @@ public class SignUpActivity extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        // ✅ Step 1: Create in Firebase Auth
         FirebaseAuth.getInstance()
-                .createUserWithEmailAndPassword(email, password)
+                .createUserWithEmailAndPassword(Email, Password)
                 .addOnCompleteListener(task -> {
-                    progressDialog.dismiss();
                     if (task.isSuccessful()) {
                         String uid = task.getResult().getUser().getUid();
 
-                        // ✅ Step 2: Build user profile for Realtime DB
                         HashMap<String, Object> userMap = new HashMap<>();
                         userMap.put("uid", uid);
-                        userMap.put("username", username);
-                        userMap.put("name", username);
-                        userMap.put("email", email);
-
-                        // 🔑 don't store password here for security
+                        userMap.put("username", Username);
+                        userMap.put("name", Name);
+                        userMap.put("email", Email);
                         userMap.put("approvedTutor", false);
-                        userMap.put("wanttutorrights", tutorRightsCb.isChecked());
+                        userMap.put("wanttutorrights", alsowanttutorrights.isChecked());
 
-                        if (tutorRightsCb.isChecked()) {
+                        if (alsowanttutorrights.isChecked()) {
                             userMap.put("tutorVerificationUrl", uploadedImageUrl);
                         }
 
-                        // default values
+                        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         userMap.put("isAdmin", false);
                         userMap.put("isModerator", false);
                         userMap.put("isTutor", false);
-                        userMap.put("location", "");
+                        userMap.put("location", Location);
                         userMap.put("lastActiveDate", "");
-                        userMap.put("lastLoginDate", "");
+                        userMap.put("lastLoginDate", today);
                         userMap.put("lastQuizDate", "");
                         userMap.put("level", 0);
                         userMap.put("xp", 0);
                         userMap.put("stars", 0);
                         userMap.put("streak", 0);
-                        userMap.put("skills", "");
-                        userMap.put("skilloffered", "");
-                        userMap.put("skillrequested", "");
+                        userMap.put("skills", Skils);
+                        userMap.put("skilloffered", SkillOffered);
+                        userMap.put("skillrequested", SkillRequested);
                         userMap.put("registeredCourses", new HashMap<>());
                         userMap.put("progress", new HashMap<>());
                         userMap.put("messages", new HashMap<>());
                         userMap.put("favourites", new HashMap<>());
 
-                        usersRef.child(username).setValue(userMap).addOnCompleteListener(dbTask -> {
-                            if (dbTask.isSuccessful()) {
-                                Toast.makeText(this, "Registered Successfully", Toast.LENGTH_SHORT).show();
-                                finish();
-                            } else {
-                                Toast.makeText(this, "DB Error: " + dbTask.getException().getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        });
+                        // ✅ Debug log
+                        android.util.Log.d("FIREBASE", "Saving user: " + userMap);
+
+                        usersRef.child(safeUsername).setValue(userMap)
+                                .addOnCompleteListener(dbTask -> {
+                                    progressDialog.dismiss();
+                                    if (dbTask.isSuccessful()) {
+                                        Toast.makeText(this, "Registered Successfully", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    } else {
+                                        android.util.Log.e("FIREBASE", "DB Error", dbTask.getException());
+                                        Toast.makeText(this, "DB Error: " + dbTask.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+                    } else {
+                        progressDialog.dismiss();
+                        Toast.makeText(this, "Auth Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
+
+
 }
