@@ -22,8 +22,8 @@ We have **4 main roles**:
 ---
 
 ## 🎥 Video Demos  
-- 📱 **SkillShare App (User & Tutor):** [Watch Demo](https://youtu.be/HhMhe7UlNxI)  
-- 💻 **SkillShare Web (Admin & Moderator):** *Coming Soon*  
+- 📱 **SkillShare App (User & Tutor):** [Watch Demo](https://drive.google.com/file/d/1mWdn4rk9fI-HxXKAZTavBiaeCzYIKK64/view?usp=sharing)  
+- 💻 **SkillShare Web (Admin & Moderator):** [Watch Demo](https://drive.google.com/file/d/1hGe4ZVRlglaY9znzZ1IDbPXssYBCnaCt/view?usp=drive_link)  
 
 ---
 
